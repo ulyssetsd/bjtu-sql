@@ -1,0 +1,24 @@
+.bg-faded {
+    background-color: #f7f7f7;
+}
+.profil-pic {
+	position: absolute; 
+}
+.my-profil .profil-pic {
+	top: 20px; 
+	height: 48px;
+}
+.stream .profil-pic {
+	left: 20px; 
+	top: 14px; 
+	height: 40px;
+}
+.new-post .profil-pic {
+	left: 20px; 
+	top: 17px; 
+	height: 40px;
+}
+
+.stream .profil-pic + .post-container {
+	margin-left: 56px;
+}
