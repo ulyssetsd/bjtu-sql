@@ -6,7 +6,6 @@
 	height: 40px;
 }
 .my-profil .profil-pic {
-	top: 10px;
 	height: 64px;
 }
 .stream .profil-pic {
@@ -40,9 +39,6 @@ a:hover .text-secondary {
     display: inline-block;
     vertical-align: middle;
     float: none;
-}
-.profil-content {
-	margin-top: -3px;
 }
 
 body {
