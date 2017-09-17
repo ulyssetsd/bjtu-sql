@@ -25,8 +25,8 @@
 				<div class="col-md-4 col-lg-3">
 					<div class="card mt-3 my-profil">
 						<div class="card-body">
-							<img src="img/profil.png" alt="..." class="rounded-circle float-left" style="width: 64px;">
-							<div class="align-middle" style="margin-left: 76px;">
+							<img src="img/profil.png" alt="..." class="rounded-circle float-left mr-3" style="width: 64px;">
+							<div class="align-middle">
 								<h5 class="card-title mt-2"><a href="profil.html">Ulysse T.</a></h5>
 								<h6 class="card-subtitle mb-2 text-muted"><a href="profil.html" class="text-secondary">@ulyssetsd</a></h6>
 							</div><br>
@@ -63,15 +63,15 @@
 							<form>
 								<div class="form-group">
 									<label for="old-password">Old password</label>
-									<input type="password" class="form-control" id="old-password" placeholder="Old password">
+									<input type="password" class="form-control" id="old-password" placeholder="Old password" required>
 								</div>
 								<div class="form-group">
 									<label for="new-password">New password</label>
-									<input type="password" class="form-control" id="new-password" placeholder="New password">
+									<input type="password" class="form-control" id="new-password" placeholder="New password" required>
 								</div>
 								<div class="form-group">
 									<label for="new-password-confirmation">New password confirmation</label>
-									<input type="password" class="form-control" id="new-password-confirmation" placeholder="New password confirmation">
+									<input type="password" class="form-control" id="new-password-confirmation" placeholder="New password confirmation" required>
 								</div>
 								<button type="submit" class="btn btn-primary">Submit</button>
 							</form>
@@ -85,12 +85,13 @@
 							<form>
 								<div class="form-group">
 									<label for="email-adress">New email address</label>
-									<input type="email" class="form-control" id="email-adress" placeholder="name@example.com">
+									<input type="email" class="form-control" id="email-adress" placeholder="name@example.com" required>
 								</div>
 								<button type="submit" class="btn btn-primary">Submit</button>
 							</form>
 						</div>
 					</div>
+					<a href="login.html" class="btn btn-outline-danger btn-block btn-lg mt-3">Logout</a>
 				</div>
 			</div>
 		</div> <!-- /container -->
