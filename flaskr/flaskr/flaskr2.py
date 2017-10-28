@@ -17,7 +17,6 @@ def shutdown_session(exception=None):
 @app.route('/')
 def show_entries():
     if not session.get('logged_in'):
-        #return render_template('login.html')
         return redirect(url_for('users.login'))
     return render_template('show_entries.html')
 

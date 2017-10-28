@@ -15,10 +15,12 @@ mod = Blueprint('users', __name__, url_prefix='/users',)
 def register():
     if request.method == 'POST':
         error = None
-        email = request.form['email']
-        nickname = request.form['nickname']
-        password = request.form['password']
-        password2 = request.form['password2']
+        email = request.form['email'].strip()
+        nickname = request.form['nickname'].strip()
+        password = request.form['password'].strip()
+        password2 = request.form['password2'].strip()
+
+        email = email.lower()
 
         if email == "" or nickname == "" or password == "" or password2 == "":
             error = 'Please input all the information'
@@ -52,9 +54,13 @@ def register():
 @mod.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
+    if session.get('logged_in'):
+        return redirect(url_for('show_entries'))
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form['email'].strip()
+        password = request.form['password'].strip()
+
+        email = email.lower()
 
         u = Users.query.filter(Users.email == email).first()
         if u is None:
@@ -79,10 +85,29 @@ def logout():
 @mod.route('/edit', methods=['GET', 'POST'])
 def edit():
     u = Users.query.filter(Users.email == session['logged_email']).first()
+    if request.method == 'POST':
+        u.nickname = request.form['nickname']
+        db_session.commit()
+        flash('Edit Nickname Success!')
     return render_template('users/edit.html', u=u)
 
 
 @mod.route('/editPsd', methods=['GET', 'POST'])
 def editPsd():
     u = Users.query.filter(Users.email == session['logged_email']).first()
-    return render_template('users/edit.html', u=u)
+    error = None
+    if request.method == 'POST':
+        oldPassword = request.form['oldPassword'].strip()
+        newPassword = request.form['newPassword'].strip()
+        newPassword2 = request.form['newPassword2'].strip()
+        if not bcrypt.check_password_hash(u.password, oldPassword):
+            error = 'Your old password is not right.'
+        elif newPassword != newPassword2:
+            error = 'The password is not repeated correctly'
+        elif len(newPassword) < 6:
+            error = 'The password has at least 6 characters'
+        else:
+            u.password = bcrypt.generate_password_hash(newPassword)
+            db_session.commit()
+            flash('Edit Password Success!')
+    return render_template('users/edit.html', u=u, error=error)
