@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, Blueprint, render_template, redirect, request,\
     url_for, session, flash
-from models import Users
-from database import db_session
+#from models import Users
+from database import conn, cursor
 from flask.ext.bcrypt import *
 import re
 
@@ -32,19 +32,21 @@ def register():
                           '[0-9a-zA-Z]{1,15}\.[com,cn,net]', email):
             error = 'Please input the right email'
 
-        u = Users.query.filter(Users.email == email).first()
+        sql = "SELECT * FROM users where email = '%s';" % (email)
+        cursor.execute(sql)
+        u = cursor.fetchone()
+
         if u is not None:
             error = 'The email has already exsit'
 
         if error is not None:
             return render_template('register.html', error=error)
         else:
-            u = Users()
-            u.email = email
-            u.nickname = nickname
-            u.password = bcrypt.generate_password_hash(password)
-            db_session.add(u)
-            db_session.commit()
+            password = bcrypt.generate_password_hash(password)
+            sql = "INSERT INTO users(email,nickname,password) " + \
+                "VALUES(%s,%s," + password + ");" % (email, nickname)
+            cursor.execute(sql)
+            conn.commit()
             flash('Register Success!')
             return redirect(url_for('users.login'))
 
@@ -62,12 +64,16 @@ def login():
 
         email = email.lower()
 
-        u = Users.query.filter(Users.email == email).first()
+        sql = "SELECT password,user_id FROM users where email = '%s';" % (email)
+        cursor.execute(sql)
+        u = cursor.fetchone()
+
         if u is None:
             error = "The user doesn\'t exsit.Please register first."
-        elif bcrypt.check_password_hash(u.password, password):
+        elif bcrypt.check_password_hash(u[0], password):
             session['logged_in'] = True
             session['logged_email'] = email
+            session['logged_id'] = u[1]
             return redirect(url_for('show_entries'))
         else:
             error = "Your password is wrong.Try it again."
@@ -84,30 +90,45 @@ def logout():
 
 @mod.route('/edit', methods=['GET', 'POST'])
 def edit():
-    u = Users.query.filter(Users.email == session['logged_email']).first()
+    sql = "SELECT * FROM users where email = '%s';" % (session['logged_email'])
+    cursor.execute(sql)
+    u = cursor.fetchone()
     if request.method == 'POST':
-        u.nickname = request.form['nickname']
-        db_session.commit()
+        sql = "UPDATE users SET nickname = '%s' where email = '%s'" \
+        % (request.form['nickname'], session['logged_email'])
+        cursor.execute(sql)
+        sql = "SELECT * FROM users where email = '%s';" \
+            % (session['logged_email'])
+        cursor.execute(sql)
+        u = cursor.fetchone()
+        conn.commit()
         flash('Edit Nickname Success!')
     return render_template('users/edit.html', u=u)
 
 
 @mod.route('/editPsd', methods=['GET', 'POST'])
 def editPsd():
-    u = Users.query.filter(Users.email == session['logged_email']).first()
+    sql = "SELECT password FROM users where email = '%s';" \
+        % (session['logged_email'])
+    cursor.execute(sql)
+    u = cursor.fetchone()
     error = None
     if request.method == 'POST':
         oldPassword = request.form['oldPassword'].strip()
         newPassword = request.form['newPassword'].strip()
         newPassword2 = request.form['newPassword2'].strip()
-        if not bcrypt.check_password_hash(u.password, oldPassword):
+        if not bcrypt.check_password_hash(u[0], oldPassword):
             error = 'Your old password is not right.'
         elif newPassword != newPassword2:
             error = 'The password is not repeated correctly'
         elif len(newPassword) < 6:
             error = 'The password has at least 6 characters'
         else:
-            u.password = bcrypt.generate_password_hash(newPassword)
-            db_session.commit()
+            password = bcrypt.generate_password_hash(newPassword)
+            sql = "UPDATE users SET password = '" + \
+                password + "' where email = '%s'" \
+                % (password, session['logged_email'])
+            cursor.execute(sql)
+            conn.commit()
             flash('Edit Password Success!')
     return render_template('users/edit.html', u=u, error=error)

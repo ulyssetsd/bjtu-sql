@@ -1,21 +1,35 @@
 {% extends "layout.html" %}
 {% block body %}
   {% if session.logged_in %}
-    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+    <form action="{{ url_for('message.add') }}" method=post class=add-entry>
       <dl>
-        <dt>Title:
-        <dd><input type=text size=30 name=title>
         <dt>Text:
-        <dd><textarea name=text rows=5 cols=40></textarea>
-        <dd><input type=submit value=Share>
+        <dd><textarea name=content rows=5 cols=40></textarea>
+        <dd><input type=submit value=Post>
       </dl>
     </form>
   {% endif %}
   <ul class=entries>
   {% for entry in entries %}
-    <li><h2>{{ entry.title }}</h2>{{ entry.text|safe }}
+    <dl>
+<!--
+        <li>{{ entry.4}}</li>
+-->
+        <li>{{ entry.2|safe }}</li>
+        <div class="div_delete">
+            {{entry.3}}&nbsp&nbsp
+            <a href='message/edit/{{entry.0}}'>Edit</a>
+            &nbsp
+            <a href='message/delete/{{entry.0}}' onclick="return confirm('Are you sure to delete it?')">Delete</a>
+            &nbsp
+            <a href='comment/show/{{entry.0}}'>Comment</a>
+            &nbsp
+            <a href='like_msg/like/{{entry.0}}'>Like</a>
+        </div>
+        <hr>
+    </dl>
   {% else %}
-    <li><em>Unbelievable.  No entries here so far</em>
+    <li><em>Unbelievable.  No messages here so far</em>
   {% endfor %}
   </ul>
 {% endblock %}
