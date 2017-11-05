@@ -5,11 +5,12 @@ from database import conn, cursor
 app = Flask(__name__)  # create the application instance :)
 
 
-from views import users, message, comment, like_msg
+from views import users, message, comment, like_msg, like_cmt
 app.register_blueprint(users.mod)
 app.register_blueprint(message.mod)
 app.register_blueprint(comment.mod)
 app.register_blueprint(like_msg.mod)
+app.register_blueprint(like_cmt.mod)
 
 
 #@app.teardown_appcontext
@@ -27,14 +28,26 @@ def show_entries():
         % (user_id)
     cursor.execute(sql)
     m = cursor.fetchall()
-    #messages = list(m)
-    #for i,message in messages:
-        #user_id = message[1]
-        #sql = 'SELECT nickname FROM users where user_id = %d' % user_id
-        #cursor.execute(sql)
-        #u = cursor.fetchone()
-        #message[4] = 'u[0]'
-    return render_template('show_entries.html', entries=m)
+    messages = list(m)
+    for i, message in enumerate(messages):
+        message = list(message)
+        user_id = message[1]
+        sql = 'SELECT nickname FROM users where user_id = %d' % user_id
+        cursor.execute(sql)
+        u = cursor.fetchone()
+        message.append(u[0])
+        sql = "SELECT * FROM like_msg where msg_id = %d AND user_id = %d" \
+            % (message[0], user_id)
+        cursor.execute(sql)
+        like = cursor.fetchone()
+        if like is not None:
+            like_flag = 1
+        else:
+            like_flag = 0
+        message.append(like_flag)
+        messages[i] = message
+
+    return render_template('show_entries.html', entries=messages)
 
 
 @app.route('/add', methods=['POST'])

@@ -12,10 +12,8 @@
   <ul class=entries>
   {% for entry in entries %}
     <dl>
-<!--
-        <li>{{ entry.4}}</li>
--->
-        <li>{{ entry.2|safe }}</li>
+        <li>{{ entry.5}}:
+            {{ entry.2|safe }}</li>
         <div class="div_delete">
             {{entry.3}}&nbsp&nbsp
             <a href='message/edit/{{entry.0}}'>Edit</a>
@@ -24,7 +22,11 @@
             &nbsp
             <a href='comment/show/{{entry.0}}'>Comment</a>
             &nbsp
-            <a href='like_msg/like/{{entry.0}}'>Like</a>
+            {% if entry.6 ==1 %}
+                <a href='like_msg/unlike/{{entry.0}}'>Unlike</a>
+            {% else %}
+                <a href='like_msg/like/{{entry.0}}'>Like</a>
+            {% endif %}
         </div>
         <hr>
     </dl>

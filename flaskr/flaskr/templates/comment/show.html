@@ -18,11 +18,17 @@
   <ul class=entries>
   {% for c in cs %}
     <dl>
-        <li>{{ c.3|safe }}</li>
+        <li>{{ c.5 }}:{{ c.3|safe }}</li>
         <div class="div_delete">
             <a href='/../comment/edit/{{c.0}}'>Edit</a>
-            &nbsp&nbsp
+            &nbsp
             <a href='/../comment/delete/{{c.0}}' onclick="return confirm('Are you sure to delete it?')">Delete</a>
+            &nbsp
+            {% if c.6 == 1 %}
+                <a href='/../like_cmt/unlike/{{c.0}}'>Unlike</a>
+            {% else %}
+                <a href='/../like_cmt/like/{{c.0}}'>Like</a>
+            {% endif %}
         </div>
 
         <hr>

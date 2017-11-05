@@ -53,4 +53,9 @@ def delete(msg_id):
 
 @mod.route('/test', methods=['GET', 'POST'])
 def test():
-    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    user_id = session['logged_id']
+    sql = 'SELECT * FROM message where user_id = %d ORDER BY c_time DESC' \
+        % (user_id)
+    cursor.execute(sql)
+    m = cursor.fetchall()
+    print(m)

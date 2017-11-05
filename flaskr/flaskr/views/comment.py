@@ -9,6 +9,7 @@ mod = Blueprint('comment', __name__, url_prefix='/comment',)
 
 @mod.route('/show/<int:msg_id>', methods=['GET', 'POST'])
 def show(msg_id):
+    user_id = session['logged_id']
     if request.method == 'GET':
         sql = "SELECT * FROM message where msg_id = %d;" % (msg_id)
         cursor.execute(sql)
@@ -18,6 +19,23 @@ def show(msg_id):
         cs = cursor.fetchall()
         if cs is None:
             cs = ()
+        cs = list(cs)
+        for i, comment in enumerate(cs):
+            comment = list(comment)
+            sql = "SELECT nickname FROM users where user_id = %d" % user_id
+            cursor.execute(sql)
+            u = cursor.fetchone()
+            comment.append(u[0])
+            sql = "SELECT * FROM like_cmt where cmt_id = %d AND user_id = %d" \
+                % (comment[0], user_id)
+            cursor.execute(sql)
+            like = cursor.fetchone()
+            if like is not None:
+                like_flag = 1
+            else:
+                like_flag = 0
+            comment.append(like_flag)
+            cs[i] = comment
     return render_template('comment/show.html', m=m, cs=cs)
 
 
