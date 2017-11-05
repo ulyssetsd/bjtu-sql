@@ -43,9 +43,7 @@ def register():
             return render_template('register.html', error=error)
         else:
             password = bcrypt.generate_password_hash(password)
-            sql = "INSERT INTO users(email,nickname,password) " + \
-                "VALUES(%s,%s," + password + ");" % (email, nickname)
-            cursor.execute(sql)
+            cursor.execute("INSERT INTO users(email,nickname,password) VALUES(%s,%s,%s);", (email, nickname, password))
             conn.commit()
             flash('Register Success!')
             return redirect(url_for('users.login'))
@@ -70,7 +68,7 @@ def login():
 
         if u is None:
             error = "The user doesn\'t exsit.Please register first."
-        elif bcrypt.check_password_hash(u[0], password):
+        elif bcrypt.check_password_hash(u[0].encode('utf-8'), password):
             session['logged_in'] = True
             session['logged_email'] = email
             session['logged_id'] = u[1]
