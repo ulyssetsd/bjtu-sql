@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Edit User Information</h2>
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('users.edit') }}" method=post>
+    <dl>
+      <dt>Email:
+      <dd>{{u.1}}
+      <dt>Nickname:
+      <dd><input type=text name=nickname value={{u.3}}>
+      <dd><input type=submit value=Edit>
+    </dl>
+  </form>
+  <form action="{{ url_for('users.editPwd') }}" method=post>
+    <dl>
+      <dt>Old Password:
+      <dd><input type=password name=oldPassword>
+      <dt>New Password:
+      <dd><input type=password name=newPassword>
+      <dt>Repeat Your Password:
+      <dd><input type=password name=newPassword2>
+      <dd><input type=submit value=Edit>
+    </dl>
+  </form>
+{% endblock %}

@@ -1,0 +1,2 @@
+. venv/bin/activate
+python flaskr/flaskr2.py
