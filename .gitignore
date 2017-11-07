@@ -19,3 +19,6 @@ htmlcov
 .coverage
 .coverage.*
 *,cover
+
+# Ignore the virtual env
+flaskr/venv/*
