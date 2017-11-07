@@ -3,7 +3,7 @@ from flask import Flask, Blueprint, render_template, redirect, request,\
     url_for, session, flash
 #from models import Users
 from database import conn, cursor
-from flask_bcrypt import *
+#from flask_bcrypt import *
 import re
 
 app = Flask(__name__)
@@ -41,8 +41,9 @@ def register():
         if error is not None:
             return render_template('register.html', error=error)
         else:
-            password = bcrypt.generate_password_hash(password)
-            cursor.execute("INSERT INTO users(email,nickname,password) VALUES(%s,%s,%s);", (email, nickname, password))
+            #password = bcrypt.generate_password_hash(password)
+            cursor.execute("INSERT INTO users(email,nickname,password) VALUES(%s,%s,crypt(%s, gen_salt('bf', 8)));", \
+                (email, nickname, password))
             conn.commit()
             flash('Register Success!')
             return redirect(url_for('users.login'))
@@ -66,6 +67,18 @@ def login():
 
         if u is None:
             error = "The user doesn\'t exsit.Please register first."
+
+        else:
+            cursor.execute("SELECT user_id FROM users WHERE email = %s AND password = crypt(%s, password);", (email, password))
+            u = cursor.fetchone()
+            if u is None:
+                error = "Your password is wrong.Try it again."
+            else:
+                session['logged_in'] = True
+                session['logged_email'] = email
+                session['logged_id'] = u[0]
+                return redirect(url_for('show_entries'))
+        ''' 
         elif bcrypt.check_password_hash(u[0], password):
             session['logged_in'] = True
             session['logged_email'] = email
@@ -73,6 +86,7 @@ def login():
             return redirect(url_for('show_entries'))
         else:
             error = "Your password is wrong.Try it again."
+        '''
 
     return render_template('login.html', error=error)
 
@@ -99,22 +113,30 @@ def edit():
 
 @mod.route('/editPwd', methods=['GET', 'POST'])
 def editPwd():
-    cursor.execute("SELECT password FROM users where email = %s;", (session['logged_email'],))
-    u = cursor.fetchone()
+    #cursor.execute("SELECT password FROM users where email = %s;", (session['logged_email'],))
+    #u = cursor.fetchone()
     error = None
     if request.method == 'POST':
         oldPassword = request.form['oldPassword'].strip()
         newPassword = request.form['newPassword'].strip()
         newPassword2 = request.form['newPassword2'].strip()
-        if not bcrypt.check_password_hash(u[0], oldPassword):
-            error = 'Your old password is not right.'
+
+        cursor.execute("SELECT user_id FROM users WHERE email = %s AND password = crypt(%s, password);", \
+             (session['logged_email'], oldPassword))
+        u = cursor.fetchone()
+        if u is None:
+            error = "Your old password is not right."
+        #if not bcrypt.check_password_hash(u[0], oldPassword):
+        #    error = 'Your old password is not right.'
         elif newPassword != newPassword2:
             error = 'The password is not repeated correctly'
         elif len(newPassword) < 6:
             error = 'The password has at least 6 characters'
         else:
-            password = bcrypt.generate_password_hash(newPassword)
-            cursor.execute("UPDATE users SET password = %s where email = %s" , (password, session['logged_email']))
+            #password = bcrypt.generate_password_hash(newPassword)
+            password = newPassword
+            cursor.execute("UPDATE users SET password = crypt(%s, gen_salt('bf', 8)) where email = %s", \
+                (password, session['logged_email']))
             conn.commit()
             flash('Edit Password Success!')
     return render_template('users/edit.html', u=u, error=error)
