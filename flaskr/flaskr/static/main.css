@@ -1,0 +1,46 @@
+.bg-faded {
+    background-color: #f7f7f7;
+}
+.profil-pic {
+	position: absolute; 
+	height: 40px;
+}
+.my-profil .profil-pic {
+	height: 64px;
+}
+.stream .profil-pic {
+	left: 20px; 
+	top: 14px; 
+}
+.new-post .profil-pic {
+	left: 20px; 
+	top: 17px; 
+}
+
+.post-container {
+	margin-left: 56px;
+}
+
+.profil-stats a:hover {
+	text-decoration: none;
+}
+
+.nav-tabs .nav-link {
+	margin-bottom: -1px;
+	z-index: 1;
+}
+.nav-tabs .nav-link h5 {
+	margin-bottom: 4px;
+}
+a:hover .text-secondary {
+	color: #666!important;
+}
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+
+body {
+	margin-bottom: 16px;
+}

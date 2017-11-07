@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block body %}
+{% block cardbody %}
   {% if session.logged_in %}
     <form action="{{ url_for('comment.edit',cmt_id=cmt_id) }}" method=post class=add-entry>
       <dl>

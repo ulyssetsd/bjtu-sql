@@ -1,37 +1,39 @@
 {% extends "layout.html" %}
-{% block body %}
+{% block cardbody %}
   {% if session.logged_in %}
-    <form action="{{ url_for('message.add') }}" method=post class=add-entry>
-      <dl>
-        <dt>Text:
-        <dd><textarea name=content rows=5 cols=40></textarea>
-        <dd><input type=submit value=Post>
-      </dl>
-    </form>
+  <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+  <form action="{{ url_for('message.add') }}" method=post class=add-entry>
+  <div class="input-group">
+    <input name=content type="text" class="form-control" placeholder="New post ..." aria-label="New post ..." style="margin-left: 56px;">
+    <span class="input-group-btn">
+      <input class="btn btn-primary" type=submit value=Post>Send ➤</input>
+    </span>
+  </div>
+  </form>
   {% endif %}
-  <ul class=entries>
+{% endblock %}
+{% block body %}
+  <div class="card mt-3 stream">
+  <ul class="entries list-group list-group-flush">
   {% for entry in entries %}
-    <dl>
-        <li>{{ entry.5}}:
-            {{ entry.2|safe }}</li>
-        <div class="div_delete">
-            {{entry.3}}&nbsp&nbsp
-            <a href='message/edit/{{entry.0}}'>Edit</a>
-            &nbsp
-            <a href='message/delete/{{entry.0}}' onclick="return confirm('Are you sure to delete it?')">Delete</a>
-            &nbsp
-            <a href='comment/show/{{entry.0}}'>Comment</a>
-            &nbsp
-            {% if entry.6 ==1 %}
-                <a href='like_msg/unlike/{{entry.0}}'>Unlike</a>
-            {% else %}
-                <a href='like_msg/like/{{entry.0}}'>Like</a>
-            {% endif %}
-        </div>
-        <hr>
-    </dl>
+    <li class="list-group-item">
+      <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+      <div class="post-container">
+        <a href="" >@{{ entry.5 }}</a> {{ entry.2|safe }}<br>
+        <a href='message/edit/{{entry.0}}' class="card-link">Edit</a>
+        <a href='message/delete/{{entry.0}}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
+        <a href='comment/show/{{entry.0}}' class="card-link">Comment</a>
+        {% if entry.6 ==1 %}
+          <a href='like_msg/unlike/{{entry.0}}'class="card-link">Unlike</a>
+        {% else %}
+          <a href='like_msg/like/{{entry.0}}' class="card-link">Like</a>
+        {% endif %}
+        <span class="float-right text-muted">{{entry.3}}</span>
+      </div>
+    </li>
   {% else %}
-    <li><em>Unbelievable.  No messages here so far</em>
+    <li class="list-group-item"><em>Unbelievable.  No messages here so far</em></li>
   {% endfor %}
   </ul>
+  </div>
 {% endblock %}

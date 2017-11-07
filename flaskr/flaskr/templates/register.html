@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
-{% block body %}
+{% block cardbody %}
   <h2>Register</h2>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  {% if error %}
+    <div class="alert alert-danger" role="alert">{{ error }}</div>
+  {% endif %}
   <form action="{{ url_for('users.register') }}" method=post>
     <dl>
       <dt>Email:
