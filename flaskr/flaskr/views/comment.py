@@ -11,24 +11,19 @@ mod = Blueprint('comment', __name__, url_prefix='/comment',)
 def show(msg_id):
     user_id = session['logged_id']
     if request.method == 'GET':
-        sql = "SELECT * FROM message where msg_id = %d;" % (msg_id)
-        cursor.execute(sql)
+        cursor.execute("SELECT * FROM message where msg_id = %s;", (msg_id,))
         m = cursor.fetchone()
-        sql = "SELECT * FROM comment where msg_id = %d;" % (msg_id)
-        cursor.execute(sql)
+        cursor.execute("SELECT * FROM comment where msg_id = %s;", (msg_id,))
         cs = cursor.fetchall()
         if cs is None:
             cs = ()
         cs = list(cs)
         for i, comment in enumerate(cs):
             comment = list(comment)
-            sql = "SELECT nickname FROM users where user_id = %d" % user_id
-            cursor.execute(sql)
+            cursor.execute("SELECT nickname FROM users where user_id = %s", (user_id,))
             u = cursor.fetchone()
             comment.append(u[0])
-            sql = "SELECT * FROM like_cmt where cmt_id = %d AND user_id = %d" \
-                % (comment[0], user_id)
-            cursor.execute(sql)
+            cursor.execute("SELECT * FROM like_cmt where cmt_id = %s AND user_id = %s", (comment[0], user_id))
             like = cursor.fetchone()
             if like is not None:
                 like_flag = 1
@@ -46,9 +41,7 @@ def add():
         user_id = session['logged_id']
         content = request.form['content']
         c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        sql = "INSERT INTO comment(msg_id,user_id,content,c_time) " + \
-                "VALUES(%d,%d,'%s','%s');" % (msg_id, user_id, content, c_time)
-        cursor.execute(sql)
+        cursor.execute("INSERT INTO comment(msg_id,user_id,content,c_time) VALUES(%s,%s,%s,%s);", (msg_id, user_id, content, c_time))
         conn.commit()
     return redirect(url_for('comment.show', msg_id=msg_id))
 
@@ -57,19 +50,15 @@ def add():
 def edit(cmt_id):
     m = None
     if request.method == 'GET':
-        sql = "SELECT * FROM comment where cmt_id = %d;" % (cmt_id)
-        cursor.execute(sql)
+        cursor.execute("SELECT * FROM comment where cmt_id = %s;", (cmt_id,))
         m = cursor.fetchone()
         return render_template('comment/edit.html', m=m, cmt_id=cmt_id)
 
     if request.method == 'POST':
         content = request.form['content']
-        sql = "UPDATE comment SET content = '%s' where cmt_id = '%d';" \
-            % (content, cmt_id)
-        cursor.execute(sql)
+        cursor.execute("UPDATE comment SET content = %s where cmt_id = %s;", (content, cmt_id))
         conn.commit()
-        sql = "SELECT msg_id FROM comment where cmt_id = %d;" % (cmt_id)
-        cursor.execute(sql)
+        cursor.execute("SELECT msg_id FROM comment where cmt_id = %s;", (cmt_id,))
         m = cursor.fetchone()
         flash('Edit Success!')
         return redirect(url_for('comment.show', msg_id=m[0]))
@@ -80,11 +69,9 @@ def edit(cmt_id):
 @mod.route('/delete/<int:cmt_id>', methods=['GET', 'POST'])
 def delete(cmt_id):
     if request.method == 'GET':
-        sql = "SELECT msg_id FROM comment where cmt_id = %d;" % (cmt_id)
-        cursor.execute(sql)
+        cursor.execute("SELECT msg_id FROM comment where cmt_id = %s;", (cmt_id,))
         m = cursor.fetchone()
-        sql = "DELETE FROM comment where cmt_id = '%d';" % (cmt_id)
-        cursor.execute(sql)
+        cursor.execute("DELETE FROM comment where cmt_id = %s;", (cmt_id,))
         conn.commit()
         flash('Delete Success!')
     return redirect(url_for('comment.show', msg_id=m[0]))

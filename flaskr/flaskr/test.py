@@ -5,9 +5,7 @@ from database import conn, cursor
 
 
 user_id = 5
-sql = 'SELECT * FROM message where user_id = %d ORDER BY c_time DESC' \
-    % (user_id)
-cursor.execute(sql)
+cursor.execute('SELECT * FROM message where user_id = %s ORDER BY c_time DESC', (user_id,))
 m = cursor.fetchall()
 messages = list(m)
 for i, message in enumerate(messages):

@@ -3,7 +3,7 @@ from flask import Flask, Blueprint, render_template, redirect, request,\
     url_for, session, flash
 #from models import Users
 from database import conn, cursor
-from flask.ext.bcrypt import *
+from flask_bcrypt import *
 import re
 
 app = Flask(__name__)
@@ -32,8 +32,7 @@ def register():
                           '[0-9a-zA-Z]{1,15}\.[com,cn,net]', email):
             error = 'Please input the right email'
 
-        sql = "SELECT * FROM users where email = '%s';" % (email)
-        cursor.execute(sql)
+        cursor.execute("SELECT * FROM users where email = %s;", (email,))
         u = cursor.fetchone()
 
         if u is not None:
@@ -62,13 +61,12 @@ def login():
 
         email = email.lower()
 
-        sql = "SELECT password,user_id FROM users where email = '%s';" % (email)
-        cursor.execute(sql)
+        cursor.execute("SELECT password,user_id FROM users where email = %s;", (email,))
         u = cursor.fetchone()
 
         if u is None:
             error = "The user doesn\'t exsit.Please register first."
-        elif bcrypt.check_password_hash(u[0].encode('utf-8'), password):
+        elif bcrypt.check_password_hash(u[0], password):
             session['logged_in'] = True
             session['logged_email'] = email
             session['logged_id'] = u[1]
@@ -88,27 +86,20 @@ def logout():
 
 @mod.route('/edit', methods=['GET', 'POST'])
 def edit():
-    sql = "SELECT * FROM users where email = '%s';" % (session['logged_email'])
-    cursor.execute(sql)
+    cursor.execute("SELECT * FROM users where email = %s;", (session['logged_email'],))
     u = cursor.fetchone()
     if request.method == 'POST':
-        sql = "UPDATE users SET nickname = '%s' where email = '%s'" \
-        % (request.form['nickname'], session['logged_email'])
-        cursor.execute(sql)
-        sql = "SELECT * FROM users where email = '%s';" \
-            % (session['logged_email'])
-        cursor.execute(sql)
+        cursor.execute("UPDATE users SET nickname = %s where email = %s", (request.form['nickname'], session['logged_email']))
+        cursor.execute("SELECT * FROM users where email = %s;", (session['logged_email'],))
         u = cursor.fetchone()
         conn.commit()
         flash('Edit Nickname Success!')
     return render_template('users/edit.html', u=u)
 
 
-@mod.route('/editPsd', methods=['GET', 'POST'])
-def editPsd():
-    sql = "SELECT password FROM users where email = '%s';" \
-        % (session['logged_email'])
-    cursor.execute(sql)
+@mod.route('/editPwd', methods=['GET', 'POST'])
+def editPwd():
+    cursor.execute("SELECT password FROM users where email = %s;", (session['logged_email'],))
     u = cursor.fetchone()
     error = None
     if request.method == 'POST':
@@ -123,10 +114,7 @@ def editPsd():
             error = 'The password has at least 6 characters'
         else:
             password = bcrypt.generate_password_hash(newPassword)
-            sql = "UPDATE users SET password = '" + \
-                password + "' where email = '%s'" \
-                % (password, session['logged_email'])
-            cursor.execute(sql)
+            cursor.execute("UPDATE users SET password = %s where email = %s" , (password, session['logged_email']))
             conn.commit()
             flash('Edit Password Success!')
     return render_template('users/edit.html', u=u, error=error)

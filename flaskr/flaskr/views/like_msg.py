@@ -13,9 +13,7 @@ def like(msg_id):
     if request.method == 'GET':
         user_id = session['logged_id']
         c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        sql = "INSERT INTO like_msg(msg_id, user_id,c_time) " + \
-                "VALUES(%d,'%s','%s');" % (msg_id, user_id, c_time)
-        cursor.execute(sql)
+        cursor.execute("INSERT INTO like_msg(msg_id, user_id,c_time) VALUES(%s,%s,%s);", (msg_id, user_id, c_time))
         conn.commit()
     return redirect(url_for('show_entries'))
 
@@ -24,8 +22,6 @@ def like(msg_id):
 def unlike(msg_id):
     if request.method == 'GET':
         user_id = session['logged_id']
-        sql = "DELETE FROM like_msg where msg_id = '%d' AND user_id = %d;" \
-            % (msg_id, user_id)
-        cursor.execute(sql)
+        cursor.execute("DELETE FROM like_msg where msg_id = %s AND user_id = %s;", (msg_id, user_id))
         conn.commit()
     return redirect(url_for('show_entries'))
