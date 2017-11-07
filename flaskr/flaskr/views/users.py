@@ -7,7 +7,7 @@ from database import conn, cursor
 import re
 
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
+#bcrypt = Bcrypt(app)
 mod = Blueprint('users', __name__, url_prefix='/users',)
 
 

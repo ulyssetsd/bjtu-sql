@@ -1,0 +1,9 @@
+sudo -u postgres psql 'weibodb'
+
+select * from users;
+
+\l
+
+\du
+
+\d

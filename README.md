@@ -11,9 +11,7 @@ Software Project Training
 Commands to launch in the directory /flaskr
 ``` Shell Session
 . venv/bin/activate
-export FLASK_APP=flaskr
-export FLASK_DEBUG=true
-flask run
+python flaskr/flaskr/flaskr2.py
 ```
 
 ## Create a new virtual environment
@@ -57,7 +55,7 @@ grant all privileges on database weibodb to gyf;
 Don't forget to install pgcrypto to the database
 ## Initiate the database
 ``` Shell Session
-flask initdb
+python flaskr/flaskr/sql.py
 ```
 This will call the function `@app.cli.command('initdb') def initdb_command():` in the file `flaskr/flaskr.py`.
 The function read the content of the file `schema.sql` and execute it on the database.

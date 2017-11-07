@@ -4,7 +4,7 @@ from database import conn, cursor
 sql = "CREATE TABLE users ( " + \
       "user_id serial primary key not null, " + \
       "email text, " + \
-      "password bytes, " + \
+      "password text, " + \
       "nickname text, " + \
       "c_time timestamp );"
 cursor.execute(sql)
