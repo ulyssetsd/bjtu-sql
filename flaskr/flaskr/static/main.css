@@ -52,3 +52,9 @@ li.comment {
 li.comment .profil-pic {
 	left: 76px;
 }
+
+#logo {
+	color: white;
+	padding: 0 8px;
+	margin-right: 5px;
+}

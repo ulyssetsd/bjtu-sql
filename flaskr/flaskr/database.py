@@ -19,7 +19,7 @@
 import psycopg2
 import psycopg2.extras
 
-conn = psycopg2.connect(host='127.0.0.1', port=5433, user='gyf',
+conn = psycopg2.connect(host='127.0.0.1', port=5432, user='gyf',
      password='123456', database='weibodb')
 
 cursor = conn.cursor()
