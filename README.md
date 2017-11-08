@@ -64,3 +64,4 @@ The function read the content of the file `schema.sql` and execute it on the dat
 * https://wiki.postgresql.org/wiki/Psycopg2_Tutorial (Short tutorial of psycopg2)
 * https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e (Create User and database for postgreSQL tutorial)
 * https://stackoverflow.com/questions/2647158/how-can-i-hash-passwords-in-postgresql (pqcrypto tutorial)
+* http://jinja.pocoo.org/docs/2.9/templates/ (documentation of jinja2, html template)
