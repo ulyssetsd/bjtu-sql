@@ -1,15 +1,15 @@
 {% extends "layout.html" %}
-{% block body %}
+{% block cardtitle %}
   <h2>Login</h2>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+{% endblock %}
+{% block cardbody %}
+  {% if error %}
+    <div class="alert alert-danger" role="alert">{{ error }}</div>
+  {% endif %}
   <form action="{{ url_for('users.login') }}" method=post>
-    <dl>
-      <dt>Email:
-      <dd><input type=text name=email>
-      <dt>Password:
-      <dd><input type=password name=password>
-      <dd><input type=submit value=Login>
-    </dl>
-    <a href="{{ url_for('users.register') }}">Don't have account? Go to register</a>
+    {{ forms.input('email', type='email', label='Email adress', placeholder='name@example.com') }}
+    {{ forms.input('password', type='password', label='Password', placeholder='Password') }}
+    {{ forms.submit('Login') }}
   </form>
+  <hr/><a href="{{ url_for('users.register') }}">Don't have account? Go to register</a>
 {% endblock %}

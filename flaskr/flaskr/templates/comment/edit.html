@@ -2,11 +2,8 @@
 {% block body %}
   {% if session.logged_in %}
     <form action="{{ url_for('comment.edit',cmt_id=cmt_id) }}" method=post class=add-entry>
-      <dl>
-        <dt>Comment:
-        <dd><textarea name=content rows=5 cols=40>{{m.3}}</textarea>
-        <dd><div class="div_center"><input type=submit value=Edit></div>
-      </dl>
+    	{{ forms.textarea('content', label='Comment', value=m.3) }}
+      {{ forms.submit('Edit') }}
     </form>
   {% endif %}
 {% endblock %}

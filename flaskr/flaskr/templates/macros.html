@@ -1,0 +1,28 @@
+{% macro message(id='', content='', nickname='', like='', date='', is_comment=True) -%}
+<img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+<div class="post-container">
+  <a href="" >@{{ nickname }}</a> {{ content|safe }}<br>
+
+	{% if is_comment %}
+    <a href='/../comment/edit/{{ id }}' class="card-link">Edit</a>
+    <a href='/../comment/delete/{{ id }}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
+    {% if like == 1 %}
+      <a href='/../like_cmt/unlike/{{ id }}'class="card-link">Unlike</a>
+    {% else %}
+      <a href='/../like_cmt/like/{{ id }}' class="card-link">Like</a>
+    {% endif %}
+    
+  {% else %}
+    <a href='message/edit/{{ id }}' class="card-link">Edit</a>
+    <a href='message/delete/{{ id }}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
+    <a href='comment/show/{{ id }}' class="card-link">Comment</a>
+    {% if like == 1 %}
+      <a href='like_msg/unlike/{{ id }}'class="card-link">Unlike</a>
+    {% else %}
+      <a href='like_msg/like/{{ id }}' class="card-link">Like</a>
+    {% endif %}
+	{% endif %}
+
+  <span class="float-right text-muted">{{ date }}</span>
+</div>
+{%- endmacro %}

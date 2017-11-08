@@ -1,0 +1,27 @@
+{% macro input(name, value='', type='text', label='', placeholder=label, readonly='') -%}
+<div class="form-group">
+  <label for="{{ name }}">{{ label }}</label>
+  <input type="{{ type }}" class="form-control" name="{{ name }}"  placeholder="{{ placeholder }}" {{ readonly }} value="{{ value|e }}">
+</div>
+{%- endmacro %}
+
+{% macro textarea(name, value='', label='', placeholder=label, readonly='') -%}
+<div class="form-group">
+  <label for="{{ name }}">{{ label }}</label>
+  <textarea class="form-control" name="{{ name }}" placeholder="{{ placeholder }}" {{ readonly }} >{{ value }}</textarea>
+</div>
+{%- endmacro %}
+
+{%- macro submit(name) -%}
+<button type="submit" class="btn btn-primary">{{ name }}</button>
+{%- endmacro %}
+
+{% macro special_input(name, value='', type='text', label='', placeholder=label, readonly='', send_label='Send ➤') -%}
+<img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+<div class="input-group">
+  <input name="{{ name }}" type="{{ type }}" class="form-control" placeholder="{{ placeholder }}" aria-label="{{ label }}" value="{{ value|e }}" style="margin-left: 56px;" {{ readonly }} >
+  <span class="input-group-btn">
+    <input class="btn btn-primary" type=submit value="{{ send_label }}"></input>
+  </span>
+</div>
+{%- endmacro %}

@@ -2,11 +2,8 @@
 {% block body %}
   {% if session.logged_in %}
     <form action="{{ url_for('message.edit',msg_id=msg_id) }}" method=post class=add-entry>
-      <dl>
-        <dt>Message:
-        <dd><textarea name=content rows=5 cols=40>{{m.2}}</textarea>
-        <dd><div class="div_center"><input type=submit value=Edit></div>
-      </dl>
+    	{{ forms.textarea('content', label='Message', value=m.2) }}
+      {{ forms.submit('Edit') }}
     </form>
   {% endif %}
 {% endblock %}
