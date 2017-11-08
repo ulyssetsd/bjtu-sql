@@ -1,20 +1,15 @@
 {% extends "layout.html" %}
-{% block cardbody %}
-  <h2>Register</h2>
+
+{% block body %}
+  <h2>Create a new account</h2>
   {% if error %}
     <div class="alert alert-danger" role="alert">{{ error }}</div>
   {% endif %}
   <form action="{{ url_for('users.register') }}" method=post>
-    <dl>
-      <dt>Email:
-      <dd><input type=text name=email>
-      <dt>Nickname:
-      <dd><input type=text name=nickname>
-      <dt>Password:
-      <dd><input type=password name=password>
-      <dt>Repeat Your Password:
-      <dd><input type=password name=password2>
-      <dd><input type=submit value=Register>
-    </dl>
+    {{ forms.input('email', type='email', label='Email adress', placeholder='name@example.com') }}
+    {{ forms.input('nickname', type='text', label='Nickname', placeholder='yournickname') }}
+    {{ forms.input('password', type='password', label='Password', placeholder='Password') }}
+    {{ forms.input('password2', type='password', label='Repeat your password', placeholder='Repeat your password') }}
+    {{ forms.submit('Login') }}
   </form>
 {% endblock %}

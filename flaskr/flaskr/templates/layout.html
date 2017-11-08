@@ -1,39 +1,26 @@
+{% import 'forms.html' as forms %}
 <!doctype html>
 <html lang="en">
 <head>
-  <title>Flaskr</title>
+  {% block head %}
+  <title>{% block title %}{% endblock %} - Flaskr</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
   <!-- Bootstrap core CSS -->
   <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+  {% endblock %}
 </head>
 
 <body class="bg-faded">
-<div class='container'>
-  <nav class="navbar navbar-light">
-    <a class="navbar-brand" href="{{ url_for('show_entries') }}">Flaskr</a>
-    <div class="float-right align-middle">
-    {% if not session.logged_in %}
-      <a href="{{ url_for('users.login') }}">Login</a>
-    {% else %}
-      <a href="{{ url_for('users.edit') }}">{{ session.logged_email }}</a> / 
-      <a href="{{ url_for('users.logout') }}">Logout</a>
-    {% endif %}
-    </div>
-  </nav>
-  
-  {% for message in get_flashed_messages() %}
-    <div class="flash alert alert-success" role="alert">{{ message }}</div>
-  {% endfor %}
-
-  <div class="card mt-3 stream">
-  <div class="card-body">
-  {% block cardbody %}{% endblock %}
+  {% include 'header.html' %}
+  {% include 'flash_messages.html' %}
+  <div class="container">
+    {% block body %}{% endblock %}
   </div>
-  </div>
-  {% block body %}{% endblock %}
-</div>
+  {% include 'footer.html' %}
 </body>
 </html>

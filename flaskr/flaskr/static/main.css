@@ -44,3 +44,11 @@ a:hover .text-secondary {
 body {
 	margin-bottom: 16px;
 }
+
+li.comment {
+	padding-left: 56px;
+}
+
+li.comment .profil-pic {
+	left: 76px;
+}

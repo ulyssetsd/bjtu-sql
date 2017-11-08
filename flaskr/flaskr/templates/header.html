@@ -1,0 +1,13 @@
+<div class='container'>
+<nav class="navbar navbar-light">
+  <a class="navbar-brand" href="{{ url_for('show_entries') }}">Flaskr</a>
+  <div class="float-right align-middle">
+  {% if not session.logged_in %}
+    <a href="{{ url_for('users.login') }}">Login</a>
+  {% else %}
+    <a href="{{ url_for('users.edit') }}">{{ session.logged_email }}</a> / 
+    <a href="{{ url_for('users.logout') }}">Logout</a>
+  {% endif %}
+  </div>
+</nav>
+</div>

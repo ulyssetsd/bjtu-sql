@@ -1,18 +1,14 @@
 {% extends "layout.html" %}
-{% block cardbody %}
-  {% if session.logged_in %}
-  <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
-  <form action="{{ url_for('message.add') }}" method=post class=add-entry>
-  <div class="input-group">
-    <input name=content type="text" class="form-control" placeholder="New post ..." aria-label="New post ..." style="margin-left: 56px;">
-    <span class="input-group-btn">
-      <input class="btn btn-primary" type=submit value=Post>Send ➤</input>
-    </span>
-  </div>
-  </form>
-  {% endif %}
-{% endblock %}
 {% block body %}
+  {% if session.logged_in %}
+  <div class="card">
+    <div class="card-body">
+      <form action="{{ url_for('message.add') }}" method=post class=add-entry>
+        {{ forms.special_input('content', type='text', placeholder='New post ...') }}
+      </form>
+    </div>
+  </div>
+  {% endif %}
   <div class="card mt-3 stream">
   <ul class="entries list-group list-group-flush">
   {% for entry in entries %}

@@ -1,52 +1,19 @@
 {% extends "layout.html" %}
-{% block cardbody %}
+{% block body %}
   {% if error %}
     <div class="alert alert-danger" role="alert">{{ error }}</div>
   {% endif %}
   <h2>Edit User Information</h2>
   <form action="{{ url_for('users.edit') }}" method=post>
-    <div class="form-group row">
-      <label class="col-sm-2 col-form-label">Email</label>
-      <div class="col-sm-10">
-        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{u.1}}">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-sm-2 col-form-label">Nickname</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" name=nickname placeholder="{{u.3}}" value={{u.3}}>
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-sm-10">
-        <button type="submit" class="btn btn-primary">Edit</button>
-      </div>
-    </div>
+    {{ forms.input('email', type='email', label='Email', placeholder='name@example.com', value=u.1, readonly='readonly') }}
+    {{ forms.input('nickname', type='text', label='Nickname', placeholder=u.3, value=u.3) }}
+    {{ forms.submit('Edit') }}
   </form>
   <h2>Change your password</h2>
   <form action="{{ url_for('users.editPwd') }}" method=post>
-    <div class="form-group row">
-      <label class="col-sm-2 col-form-label">Old password</label>
-      <div class="col-sm-10">
-        <input type="password" class="form-control" name=oldPassword placeholder="Old password">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-sm-2 col-form-label">New password</label>
-      <div class="col-sm-10">
-        <input type="password" class="form-control" name=newPassword placeholder="New password">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-sm-2 col-form-label">Repeat password</label>
-      <div class="col-sm-10">
-        <input type="password" class="form-control" name=newPassword2 placeholder="Repeat the new password">
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-sm-10">
-        <button type="submit" class="btn btn-primary">Edit</button>
-      </div>
-    </div>
+    {{ forms.input('password', type='password', label='Old password') }}
+    {{ forms.input('newPassword', type='password', label='New password') }}
+    {{ forms.input('newPassword2', type='password', label='Repeat password') }}
+    {{ forms.submit('Edit') }}
   </form>
 {% endblock %}

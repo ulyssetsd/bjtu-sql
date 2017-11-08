@@ -1,40 +1,36 @@
 {% extends "layout.html" %}
-{% block cardbody %}
-  {% if session.logged_in %}
-  <form action="{{ url_for('comment.add') }}" method=post>
-      <dl>
-        <dt>Content of message:
-        <dd><p>{{m.2}}</p></dd>
-        <hr>
-        <div class="div_center">
-            comment:&nbsp&nbsp
-            <input type=text name="msg_id" value={{m.0}} hidden>
-            <input type=text class="input_comment" name="content">
-            <input type=submit value=send>
-        </div>
-      </dl>
-  </form>
-  {% endif %}
-  <ul class=entries>
-  {% for c in cs %}
-    <dl>
-        <li>{{ c.5 }}:{{ c.3|safe }}</li>
-        <div class="div_delete">
-            <a href='/../comment/edit/{{c.0}}'>Edit</a>
-            &nbsp
-            <a href='/../comment/delete/{{c.0}}' onclick="return confirm('Are you sure to delete it?')">Delete</a>
-            &nbsp
-            {% if c.6 == 1 %}
-                <a href='/../like_cmt/unlike/{{c.0}}'>Unlike</a>
-            {% else %}
-                <a href='/../like_cmt/like/{{c.0}}'>Like</a>
-            {% endif %}
-        </div>
-
-        <hr>
-    </dl>
-  {% else %}
-    <li><em>Unbelievable.  No comments here so far</em>
-  {% endfor %}
-  </ul>
+{% block body %}
+  <div class="card mt-3 stream">
+  <ul class="entries list-group list-group-flush">
+    <li class="list-group-item">
+      {{ forms.textarea('message_content', label='Content of message', value=m.2, readonly='readonly') }}
+    </li>
+    {% if session.logged_in %}
+    <form action="{{ url_for('comment.add') }}" method=post>
+      <input type=text name="msg_id" value={{m.0}} hidden>
+      <li class="list-group-item comment">
+        {{ forms.special_input('content', type='text', placeholder='New comment ...') }}
+      </li>
+    </form>
+    {% endif %}
+    {% for c in cs %}
+    <li class="list-group-item comment">
+      <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+      <div class="post-container">
+        <a href="" >@{{ c.5 }}</a> {{ c.3|safe }}<br>
+        <a href='/../comment/edit/{{c.0}}' class="card-link">Edit</a>
+        <a href='/../comment/delete/{{c.0}}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
+        {% if c.6 ==1 %}
+          <a href='/../like_cmt/unlike/{{c.0}}'class="card-link">Unlike</a>
+        {% else %}
+          <a href='/../like_cmt/like/{{c.0}}' class="card-link">Like</a>
+        {% endif %}
+        <span class="float-right text-muted">{{c.4}}</span>
+      </div>
+    </li>
+    {% else %}
+      <li class="list-group-item"><em>Unbelievable.  No messages here so far</em></li>
+    {% endfor %}
+    </ul>
+  </div>
 {% endblock %}
