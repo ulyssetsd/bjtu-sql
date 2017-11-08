@@ -1,4 +1,5 @@
 {% import 'forms.html' as forms %}
+{% import 'macros.html' as macros %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -19,7 +20,12 @@
   {% include 'header.html' %}
   {% include 'flash_messages.html' %}
   <div class="container">
-    {% block body %}{% endblock %}
+    {% block body %}
+      <div class="card mt-3">
+        <div class="card-header">{% block cardtitle %}{% endblock %}</div>
+        <div class="card-body">{% block cardbody %}{% endblock %}</div>
+      </div>
+    {% endblock %}
   </div>
   {% include 'footer.html' %}
 </body>

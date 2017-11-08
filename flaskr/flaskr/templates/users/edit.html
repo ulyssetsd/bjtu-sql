@@ -3,17 +3,25 @@
   {% if error %}
     <div class="alert alert-danger" role="alert">{{ error }}</div>
   {% endif %}
-  <h2>Edit User Information</h2>
-  <form action="{{ url_for('users.edit') }}" method=post>
-    {{ forms.input('email', type='email', label='Email', placeholder='name@example.com', value=u.1, readonly='readonly') }}
-    {{ forms.input('nickname', type='text', label='Nickname', placeholder=u.3, value=u.3) }}
-    {{ forms.submit('Edit') }}
-  </form>
-  <h2>Change your password</h2>
-  <form action="{{ url_for('users.editPwd') }}" method=post>
-    {{ forms.input('password', type='password', label='Old password') }}
-    {{ forms.input('newPassword', type='password', label='New password') }}
-    {{ forms.input('newPassword2', type='password', label='Repeat password') }}
-    {{ forms.submit('Edit') }}
-  </form>
+  <div class="card mt-3">
+    <div class="card-header"><h2>Edit User Information</h2></div>
+    <div class="card-body">
+      <form action="{{ url_for('users.edit') }}" method=post>
+        {{ forms.input('email', type='email', label='Email', placeholder='name@example.com', value=u.1, readonly='readonly') }}
+        {{ forms.input('nickname', type='text', label='Nickname', placeholder=u.3, value=u.3) }}
+        {{ forms.submit('Edit') }}
+      </form>
+    </div>
+  </div>
+  <div class="card mt-3">
+    <div class="card-header"><h2>Change your password</h2></div>
+    <div class="card-body">
+      <form action="{{ url_for('users.editPwd') }}" method=post>
+        {{ forms.input('oldPassword', type='password', label='Old password') }}
+        {{ forms.input('newPassword', type='password', label='New password') }}
+        {{ forms.input('newPassword2', type='password', label='Repeat password') }}
+        {{ forms.submit('Edit') }}
+      </form>
+    </div>
+  </div>
 {% endblock %}

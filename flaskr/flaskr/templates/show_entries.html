@@ -13,19 +13,7 @@
   <ul class="entries list-group list-group-flush">
   {% for entry in entries %}
     <li class="list-group-item">
-      <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
-      <div class="post-container">
-        <a href="" >@{{ entry.5 }}</a> {{ entry.2|safe }}<br>
-        <a href='message/edit/{{entry.0}}' class="card-link">Edit</a>
-        <a href='message/delete/{{entry.0}}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
-        <a href='comment/show/{{entry.0}}' class="card-link">Comment</a>
-        {% if entry.6 ==1 %}
-          <a href='like_msg/unlike/{{entry.0}}'class="card-link">Unlike</a>
-        {% else %}
-          <a href='like_msg/like/{{entry.0}}' class="card-link">Like</a>
-        {% endif %}
-        <span class="float-right text-muted">{{entry.3}}</span>
-      </div>
+      {{ macros.message(id=entry.0, content=entry.2, nickname=entry.5, like=entry.6, date=entry.3, is_comment=False) }}
     </li>
   {% else %}
     <li class="list-group-item"><em>Unbelievable.  No messages here so far</em></li>

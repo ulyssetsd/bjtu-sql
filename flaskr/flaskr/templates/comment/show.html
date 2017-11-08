@@ -15,18 +15,7 @@
     {% endif %}
     {% for c in cs %}
     <li class="list-group-item comment">
-      <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
-      <div class="post-container">
-        <a href="" >@{{ c.5 }}</a> {{ c.3|safe }}<br>
-        <a href='/../comment/edit/{{c.0}}' class="card-link">Edit</a>
-        <a href='/../comment/delete/{{c.0}}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
-        {% if c.6 ==1 %}
-          <a href='/../like_cmt/unlike/{{c.0}}'class="card-link">Unlike</a>
-        {% else %}
-          <a href='/../like_cmt/like/{{c.0}}' class="card-link">Like</a>
-        {% endif %}
-        <span class="float-right text-muted">{{c.4}}</span>
-      </div>
+      {{ macros.message(id=c.0, content=c.3, nickname=c.5, like=c.6, date=c.4, is_comment=True) }}
     </li>
     {% else %}
       <li class="list-group-item"><em>Unbelievable.  No messages here so far</em></li>

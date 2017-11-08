@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
-
-{% block body %}
+{% block cardtitle %}
   <h2>Create a new account</h2>
+{% endblock %}
+{% block cardbody %}
   {% if error %}
     <div class="alert alert-danger" role="alert">{{ error }}</div>
   {% endif %}
@@ -10,6 +11,6 @@
     {{ forms.input('nickname', type='text', label='Nickname', placeholder='yournickname') }}
     {{ forms.input('password', type='password', label='Password', placeholder='Password') }}
     {{ forms.input('password2', type='password', label='Repeat your password', placeholder='Repeat your password') }}
-    {{ forms.submit('Login') }}
+    {{ forms.submit('Register') }}
   </form>
 {% endblock %}
