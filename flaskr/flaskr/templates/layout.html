@@ -1,10 +1,12 @@
 {% import 'forms.html' as forms %}
 {% import 'macros.html' as macros %}
+{% import 'global_var.html' as GL %}
+
 <!doctype html>
 <html lang="en">
 <head>
   {% block head %}
-  <title>{% block title %}{% endblock %} - Flaskr</title>
+  <title>{% block title %}Page{% endblock %} - {{ GL.APPLICATION_NAME }}</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

@@ -1,6 +1,7 @@
+{% import 'global_var.html' as GL %}
 <div class='container'>
 <nav class="navbar navbar-light">
-  <a class="navbar-brand" href="{{ url_for('show_entries') }}">Flaskr</a>
+  <a class="navbar-brand" href="{{ url_for('show_entries') }}">{{ GL.APPLICATION_NAME }}</a>
   <div class="float-right align-middle">
   {% if not session.logged_in %}
     <a href="{{ url_for('users.login') }}">Login</a>
