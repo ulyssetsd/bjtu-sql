@@ -13,7 +13,7 @@ def show(msg_id):
     if request.method == 'GET':
         cursor.execute("SELECT * FROM message where msg_id = %s;", (msg_id,))
         m = cursor.fetchone()
-        cursor.execute("SELECT * FROM comment where msg_id = %s;", (msg_id,))
+        cursor.execute("SELECT * FROM comment where msg_id = %s ORDER BY c_time ASC;", (msg_id,))
         cs = cursor.fetchall()
         if cs is None:
             cs = ()
@@ -50,7 +50,7 @@ def add():
 def edit(cmt_id):
     m = None
     if request.method == 'GET':
-        cursor.execute("SELECT * FROM comment where cmt_id = %s;", (cmt_id,))
+        cursor.execute("SELECT * FROM comment where cmt_id = %s ORDER BY c_time ASC;", (cmt_id,))
         m = cursor.fetchone()
         return render_template('comment/edit.html', m=m, cmt_id=cmt_id)
 
