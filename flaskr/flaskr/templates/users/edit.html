@@ -4,8 +4,8 @@
     <div class="card-header"><h2>Edit User Information</h2></div>
     <div class="card-body">
       <form action="{{ url_for('users.edit') }}" method=post>
-        {{ forms.input('email', type='email', label='Email', placeholder='name@example.com', value=u.1, readonly='readonly') }}
-        {{ forms.input('nickname', type='text', label='Nickname', placeholder=u.3, value=u.3) }}
+        {{ forms.input('email', type='email', label='Email', placeholder='name@example.com', value=u.email, readonly='readonly') }}
+        {{ forms.input('nickname', type='text', label='Nickname', placeholder=u.nickname, value=u.nickname) }}
         {{ forms.submit('Edit') }}
       </form>
     </div>

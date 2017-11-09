@@ -67,7 +67,7 @@ def login():
             else:
                 session['logged_in'] = True
                 session['logged_email'] = email
-                session['logged_id'] = u[0]
+                session['logged_id'] = u['user_id']
                 return redirect(url_for('show_entries'))
 
     return render_template('login.html', email=email)
@@ -102,14 +102,11 @@ def editPwd():
         u = cursor.fetchone()
         if u is None:
             flash("Your old password is not right.", 'danger')
-        #if not bcrypt.check_password_hash(u[0], oldPassword):
-        #    flash('Your old password is not right.'
         elif newPassword != newPassword2:
             flash('The password is not repeated correctly', 'danger')
         elif len(newPassword) < 6:
             flash('The password has at least 6 characters', 'danger')
         else:
-            #password = bcrypt.generate_password_hash(newPassword)
             password = newPassword
             cursor.execute("UPDATE users SET password = crypt(%s, gen_salt('bf', 8)) where email = %s", \
                 (password, session['logged_email']))

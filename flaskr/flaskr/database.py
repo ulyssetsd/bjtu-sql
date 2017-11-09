@@ -19,8 +19,12 @@
 import psycopg2
 import psycopg2.extras
 
-conn = psycopg2.connect(host='127.0.0.1', port=5432, user='gyf',
+try:
+	conn = psycopg2.connect(host='127.0.0.1', port=5432, user='gyf',
+     password='123456', database='weibodb')
+except Exception as e:
+	conn = psycopg2.connect(host='127.0.0.1', port=5433, user='gyf',
      password='123456', database='weibodb')
 
-cursor = conn.cursor()
+cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 

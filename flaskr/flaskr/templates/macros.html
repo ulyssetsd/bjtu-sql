@@ -1,4 +1,4 @@
-{% macro message(id='', content='', nickname='', like='', date='', is_comment=True) -%}
+{% macro message(id='', content='', nickname='', like='', date='', is_comment=False) -%}
 <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
 <div class="post-container">
   <a href="" >@{{ nickname }}</a> {{ content|safe }}<br>

@@ -2,7 +2,7 @@
 {% block body %}
   {% if session.logged_in %}
     <form action="{{ url_for('comment.edit',cmt_id=cmt_id) }}" method=post class=add-entry>
-    	{{ forms.textarea('content', label='Comment', value=m.3) }}
+    	{{ forms.textarea('content', label='Comment', value=m.content) }}
       {{ forms.submit('Edit') }}
     </form>
   {% endif %}

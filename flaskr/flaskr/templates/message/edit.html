@@ -2,7 +2,7 @@
 {% block body %}
   {% if session.logged_in %}
     <form action="{{ url_for('message.edit',msg_id=msg_id) }}" method=post class=add-entry>
-    	{{ forms.textarea('content', label='Message', value=m.2) }}
+    	{{ forms.textarea('content', label='Message', value=m.content) }}
       {{ forms.submit('Edit') }}
     </form>
   {% endif %}

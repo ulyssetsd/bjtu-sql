@@ -15,23 +15,21 @@ def show(msg_id):
         m = cursor.fetchone()
         cursor.execute("SELECT * FROM comment where msg_id = %s ORDER BY c_time ASC;", (msg_id,))
         cs = cursor.fetchall()
-        if cs is None:
-            cs = ()
-        cs = list(cs)
-        for i, comment in enumerate(cs):
-            comment = list(comment)
+        final_cs = []
+        for c in cs:
+            c = dict(c.items())
             cursor.execute("SELECT nickname FROM users where user_id = %s", (user_id,))
             u = cursor.fetchone()
-            comment.append(u[0])
-            cursor.execute("SELECT * FROM like_cmt where cmt_id = %s AND user_id = %s", (comment[0], user_id))
+            c['nickname'] = u['nickname']
+            cursor.execute("SELECT * FROM like_cmt where cmt_id = %s AND user_id = %s", (c['cmt_id'], user_id))
             like = cursor.fetchone()
             if like is not None:
                 like_flag = 1
             else:
                 like_flag = 0
-            comment.append(like_flag)
-            cs[i] = comment
-    return render_template('comment/show.html', m=m, cs=cs)
+            c['like_flag'] = like_flag
+            final_cs.append(c)
+    return render_template('comment/show.html', m=m, cs=final_cs)
 
 
 @mod.route('/add', methods=['GET', 'POST'])
@@ -61,7 +59,7 @@ def edit(cmt_id):
         cursor.execute("SELECT msg_id FROM comment where cmt_id = %s;", (cmt_id,))
         m = cursor.fetchone()
         flash('Edit Success!', 'success')
-        return redirect(url_for('comment.show', msg_id=m[0]))
+        return redirect(url_for('comment.show', msg_id=m['msg_id']))
 
     return render_template('comment/edit.html', m=m, cmt_id=cmt_id)
 
@@ -74,4 +72,4 @@ def delete(cmt_id):
         cursor.execute("DELETE FROM comment where cmt_id = %s;", (cmt_id,))
         conn.commit()
         flash('Delete Success!', 'success')
-    return redirect(url_for('comment.show', msg_id=m[0]))
+    return redirect(url_for('comment.show', msg_id=m['msg_id']))

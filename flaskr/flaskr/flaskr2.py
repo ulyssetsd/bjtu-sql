@@ -25,24 +25,23 @@ def show_entries():
         return redirect(url_for('users.login'))
     user_id = session['logged_id']
     cursor.execute("SELECT * FROM message where user_id = %s ORDER BY c_time DESC", (user_id,))
-    m = cursor.fetchall()
-    messages = list(m)
-    for i, message in enumerate(messages):
-        message = list(message)
-        user_id = message[1]
-        cursor.execute("SELECT nickname FROM users where user_id = %s", (user_id,))
+    ms = cursor.fetchall()
+    entries = []
+    for m in ms:
+        m = dict(m.items())
+        cursor.execute("SELECT nickname FROM users where user_id = %s", (m['user_id'],))
         u = cursor.fetchone()
-        message.append(u[0])
-        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (message[0], user_id))
+        m['nickname'] = u['nickname']
+        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], m['user_id']))
         like = cursor.fetchone()
         if like is not None:
             like_flag = 1
         else:
             like_flag = 0
-        message.append(like_flag)
-        messages[i] = message
+        m['like_flag'] = like_flag
+        entries.append(m)
 
-    return render_template('show_entries.html', entries=messages)
+    return render_template('show_entries.html', entries=entries)
 
 
 @app.route('/add', methods=['POST'])

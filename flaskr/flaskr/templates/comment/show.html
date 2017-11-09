@@ -3,11 +3,11 @@
   <div class="card mt-3 stream">
   <ul class="entries list-group list-group-flush">
     <li class="list-group-item">
-      {{ forms.textarea('message_content', label='Content of message', value=m.2, readonly='readonly') }}
+      {{ forms.textarea('message_content', label='Content of message', value=m.content, readonly='readonly') }}
     </li>
     {% if session.logged_in %}
     <form action="{{ url_for('comment.add') }}" method=post>
-      <input type=text name="msg_id" value={{m.0}} hidden>
+      <input type=text name="msg_id" value={{m.msg_id}} hidden>
       <li class="list-group-item comment">
         {{ forms.special_input('content', type='text', placeholder='New comment ...') }}
       </li>
@@ -15,7 +15,7 @@
     {% endif %}
     {% for c in cs %}
     <li class="list-group-item comment">
-      {{ macros.message(id=c.0, content=c.3, nickname=c.5, like=c.6, date=c.4, is_comment=True) }}
+      {{ macros.message(id=c.cmt_id, content=c.content, nickname=c.nickname, like=c.like_flag, date=c.c_time, is_comment=True) }}
     </li>
     {% else %}
       <li class="list-group-item"><em>Unbelievable.  No messages here so far</em></li>
