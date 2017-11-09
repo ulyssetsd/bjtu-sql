@@ -3,9 +3,6 @@
   <h2>Create a new account</h2>
 {% endblock %}
 {% block cardbody %}
-  {% if error %}
-    <div class="alert alert-danger" role="alert">{{ error }}</div>
-  {% endif %}
   <form action="{{ url_for('users.register') }}" method=post>
     {{ forms.input('email', type='email', label='Email adress', placeholder='name@example.com') }}
     {{ forms.input('nickname', type='text', label='Nickname', placeholder='yournickname') }}

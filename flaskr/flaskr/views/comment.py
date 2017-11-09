@@ -60,7 +60,7 @@ def edit(cmt_id):
         conn.commit()
         cursor.execute("SELECT msg_id FROM comment where cmt_id = %s;", (cmt_id,))
         m = cursor.fetchone()
-        flash('Edit Success!')
+        flash('Edit Success!', 'success')
         return redirect(url_for('comment.show', msg_id=m[0]))
 
     return render_template('comment/edit.html', m=m, cmt_id=cmt_id)
@@ -73,5 +73,5 @@ def delete(cmt_id):
         m = cursor.fetchone()
         cursor.execute("DELETE FROM comment where cmt_id = %s;", (cmt_id,))
         conn.commit()
-        flash('Delete Success!')
+        flash('Delete Success!', 'success')
     return redirect(url_for('comment.show', msg_id=m[0]))

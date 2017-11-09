@@ -30,7 +30,7 @@ def edit(msg_id):
         content = request.form['content']
         cursor.execute("UPDATE message SET content = %s where msg_id = %s;", (content, msg_id))
         conn.commit()
-        flash('Edit Success!')
+        flash('Edit Success!', 'success')
         return redirect(url_for('show_entries'))
 
     return render_template('message/edit.html', m=m, msg_id=msg_id)
@@ -41,7 +41,7 @@ def delete(msg_id):
     if request.method == 'GET':
         cursor.execute("DELETE FROM message where msg_id = %s;", (msg_id,))
         conn.commit()
-        flash('Delete Success!')
+        flash('Delete Success!', 'success')
     return redirect(url_for('show_entries'))
 
 

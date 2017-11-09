@@ -3,11 +3,8 @@
   <h2>Login</h2>
 {% endblock %}
 {% block cardbody %}
-  {% if error %}
-    <div class="alert alert-danger" role="alert">{{ error }}</div>
-  {% endif %}
   <form action="{{ url_for('users.login') }}" method=post>
-    {{ forms.input('email', type='email', label='Email adress', placeholder='name@example.com') }}
+    {{ forms.input('email', type='email', value=email, label='Email adress', placeholder='name@example.com') }}
     {{ forms.input('password', type='password', label='Password', placeholder='Password') }}
     {{ forms.submit('Login') }}
   </form>
