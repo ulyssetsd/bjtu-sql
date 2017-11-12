@@ -1,30 +1,28 @@
-{% macro message(id='', content='', nickname='', like='', date='', is_comment=False, add_pic=True) -%}
+{% macro message(id='', content='', nickname='', like='', date='', is_comment=False, add_pic=True, is_mine=False) -%}
 {% if add_pic %}
 <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
 {% endif %}
 <div class="post-container">
   <a href="" >@{{ nickname }}</a> {{ content|safe }}<br>
-
-	{% if is_comment %}
-    <a href='/../comment/edit/{{ id }}' class="card-link">Edit</a>
-    <a href='/../comment/delete/{{ id }}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
-    {% if like == 1 %}
-      <a href='/../like_cmt/unlike/{{ id }}'class="card-link">Unlike</a>
-    {% else %}
-      <a href='/../like_cmt/like/{{ id }}' class="card-link">Like</a>
-    {% endif %}
-    
+  {% if is_comment %}
+    {% set path = '/../comment' %}
+    {% set path_like = '/../like_cmt' %}
   {% else %}
-    <a href='message/edit/{{ id }}' class="card-link">Edit</a>
-    <a href='message/delete/{{ id }}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
+    {% set path = 'message' %}
+    {% set path_like = 'like_msg' %}
+  {% endif %}
+  {% if is_mine %}
+    <a href='{{ path }}/edit/{{ id }}' class="card-link">Edit</a>
+    <a href='{{ path }}/delete/{{ id }}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
+  {% endif %}
+  {% if not is_comment %}
     <a href='comment/show/{{ id }}' class="card-link">Comment</a>
-    {% if like == 1 %}
-      <a href='like_msg/unlike/{{ id }}'class="card-link">Unlike</a>
-    {% else %}
-      <a href='like_msg/like/{{ id }}' class="card-link">Like</a>
-    {% endif %}
-	{% endif %}
-
+  {% endif %}
+  {% if like == 1 %}
+    <a href='{{ path_like }}/unlike/{{ id }}'class="card-link">Unlike</a>
+  {% else %}
+    <a href='{{ path_like }}/like/{{ id }}' class="card-link">Like</a>
+  {% endif %}
   <span class="float-right text-muted">{{ date }}</span>
 </div>
 {%- endmacro %}
