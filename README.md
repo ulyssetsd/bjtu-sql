@@ -59,6 +59,12 @@ python flaskr/flaskr/sql.py
 ```
 This will call the function `@app.cli.command('initdb') def initdb_command():` in the file `flaskr/flaskr.py`.
 The function read the content of the file `schema.sql` and execute it on the database.
+## Good uses
+* if you want to give feedback, use flash('your error, messages', 'category'), the category parametres let you choose the color : primary, secondary, success, danger, warning, info, light, dark. Exemple of color here : https://getbootstrap.com/docs/4.0/components/alerts/#examples
+* macros.html and form.html allow to create some kind of html template, if you want to do a form simply use forms.input() and forms.submit() instead of write complete html form.
+* the result of cursor.fetchall() is a RawDict, you can use it as a dictionnary `result['key']`
+** RawDict cannot be modified, if you need to modified it convert him into a real python dictionnary, like this: `new_result = dict(result.items())` 
+** more info here : http://initd.org/psycopg/docs/extras.html#dictionary-like-cursor
 ## Useful link
 * https://wiki.evolix.org/HowtoPostgreSQL (list of useful commands in postgreSQL)
 * https://wiki.postgresql.org/wiki/Psycopg2_Tutorial (Short tutorial of psycopg2)

@@ -5,12 +5,13 @@ from database import conn, cursor
 app = Flask(__name__)  # create the application instance :)
 
 
-from views import users, message, comment, like_msg, like_cmt
+from views import users, message, comment, like_msg, like_cmt, relation
 app.register_blueprint(users.mod)
 app.register_blueprint(message.mod)
 app.register_blueprint(comment.mod)
 app.register_blueprint(like_msg.mod)
 app.register_blueprint(like_cmt.mod)
+app.register_blueprint(relation.mod)
 
 
 #@app.teardown_appcontext

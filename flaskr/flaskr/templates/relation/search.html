@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block cardtitle %}
+  <h2>Search</h2>
+{% endblock %}
+{% block cardbody %}
+  <form action="{{ url_for('relation.search') }}" method=post>
+    {{ forms.special_input('search', type='text', value=search, label='Nickname or email', placeholder='Nickname or email', send_label='Search it 🔍', add_pic=False) }}
+  </form>
+  <hr/>
+  {% for u in users %}
+    <li class="list-group-item">
+      {{ u.nickname }} - {{ u.email }} 
+      {% if u.is_followed %} <a href="/relation/unfollow/{{ u.user_id }}">unfollow</a>
+      {% else %} <a href="/relation/follow/{{ u.user_id }}">follow</a>
+      {% endif %}
+    </li>
+  {% else %}
+    <li class="list-group-item"><em>No results.</em></li>
+  {% endfor %}
+{% endblock %}

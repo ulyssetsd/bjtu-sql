@@ -16,10 +16,12 @@
 <button type="submit" class="btn btn-primary">{{ name }}</button>
 {%- endmacro %}
 
-{% macro special_input(name, value='', type='text', label='', placeholder=label, readonly='', send_label='Send ➤') -%}
+{% macro special_input(name, value='', type='text', label='', placeholder=label, readonly='', send_label='Send ➤', add_pic=True) -%}
+{% if add_pic %}
 <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+{% endif %}
 <div class="input-group">
-  <input name="{{ name }}" type="{{ type }}" class="form-control" placeholder="{{ placeholder }}" aria-label="{{ label }}" value="{{ value|e }}" style="margin-left: 56px;" {{ readonly }} >
+  <input name="{{ name }}" type="{{ type }}" class="form-control" placeholder="{{ placeholder }}" aria-label="{{ label }}" value="{{ value|e }}" {% if add_pic %} style="margin-left: 56px;"{% endif %} {{ readonly }} >
   <span class="input-group-btn">
     <input class="btn btn-primary" type=submit value="{{ send_label }}"></input>
   </span>
