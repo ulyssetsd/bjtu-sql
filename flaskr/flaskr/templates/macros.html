@@ -11,17 +11,17 @@
     {% set path = 'message' %}
     {% set path_like = 'like_msg' %}
   {% endif %}
-  {% if is_mine %}
-    <a href='{{ path }}/edit/{{ id }}' class="card-link">Edit</a>
-    <a href='{{ path }}/delete/{{ id }}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
-  {% endif %}
-  {% if not is_comment %}
-    <a href='comment/show/{{ id }}' class="card-link">Comment</a>
-  {% endif %}
   {% if like == 1 %}
     <a href='{{ path_like }}/unlike/{{ id }}'class="card-link">Unlike</a>
   {% else %}
     <a href='{{ path_like }}/like/{{ id }}' class="card-link">Like</a>
+  {% endif %}
+  {% if not is_comment %}
+    <a href='comment/show/{{ id }}' class="card-link">Comment</a>
+  {% endif %}
+  {% if is_mine %}
+    <a href='{{ path }}/edit/{{ id }}' class="card-link">Edit</a>
+    <a href='{{ path }}/delete/{{ id }}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
   {% endif %}
   <span class="float-right text-muted">{{ date }}</span>
 </div>

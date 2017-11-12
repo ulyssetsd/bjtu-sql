@@ -37,7 +37,7 @@ def show_entries():
         cursor.execute("SELECT nickname FROM users where user_id = %s", (m['user_id'],))
         u = cursor.fetchone()
         m['nickname'] = u['nickname']
-        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], m['user_id']))
+        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], user_id))
         like = cursor.fetchone()
         if like is not None:
             like_flag = 1
