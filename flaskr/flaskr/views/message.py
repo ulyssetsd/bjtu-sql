@@ -27,10 +27,14 @@ def edit(msg_id):
         return render_template('message/edit.html', m=m, msg_id=msg_id)
 
     if request.method == 'POST':
-        content = request.form['content']
-        cursor.execute("UPDATE message SET content = %s where msg_id = %s;", (content, msg_id))
-        conn.commit()
-        flash('Edit Success!', 'success')
+        cursor.execute("SELECT user_id FROM message where msg_id = %s;", (msg_id,))
+        if cursor.fetchone()['user_id'] == session['logged_id']:
+            content = request.form['content']
+            cursor.execute("UPDATE message SET content = %s where msg_id = %s;", (content, msg_id))
+            conn.commit()
+            flash('Edit Success!', 'success')
+        else:
+            flash("You are not the owner of this message! You can't edit it.", 'warning')
         return redirect(url_for('show_entries'))
 
     return render_template('message/edit.html', m=m, msg_id=msg_id)
@@ -39,9 +43,13 @@ def edit(msg_id):
 @mod.route('/delete/<int:msg_id>', methods=['GET', 'POST'])
 def delete(msg_id):
     if request.method == 'GET':
-        cursor.execute("DELETE FROM message where msg_id = %s;", (msg_id,))
-        conn.commit()
-        flash('Delete Success!', 'success')
+        cursor.execute("SELECT user_id FROM message where msg_id = %s;", (msg_id,))
+        if cursor.fetchone()['user_id'] == session['logged_id']:
+            cursor.execute("DELETE FROM message where msg_id = %s;", (msg_id,))
+            conn.commit()
+            flash('Delete Success!', 'success')
+        else:
+            flash("You are not the owner of this message! You can't delete it.", 'warning')
     return redirect(url_for('show_entries'))
 
 

@@ -18,7 +18,7 @@ def show(msg_id):
         final_cs = []
         for c in cs:
             c = dict(c.items())
-            cursor.execute("SELECT nickname FROM users where user_id = %s", (user_id,))
+            cursor.execute("SELECT nickname FROM users where user_id = %s", (c['user_id'],))
             u = cursor.fetchone()
             c['nickname'] = u['nickname']
             cursor.execute("SELECT * FROM like_cmt where cmt_id = %s AND user_id = %s", (c['cmt_id'], user_id))
@@ -29,7 +29,7 @@ def show(msg_id):
                 like_flag = 0
             c['like_flag'] = like_flag
             final_cs.append(c)
-    return render_template('comment/show.html', m=m, cs=final_cs)
+    return render_template('comment/show.html', m=m, cs=final_cs, user_id=user_id)
 
 
 @mod.route('/add', methods=['GET', 'POST'])
@@ -53,12 +53,16 @@ def edit(cmt_id):
         return render_template('comment/edit.html', m=m, cmt_id=cmt_id)
 
     if request.method == 'POST':
-        content = request.form['content']
-        cursor.execute("UPDATE comment SET content = %s where cmt_id = %s;", (content, cmt_id))
-        conn.commit()
+        cursor.execute("SELECT user_id FROM comment where cmt_id = %s;", (cmt_id,))
+        if cursor.fetchone()['user_id'] == session['logged_id']:
+            content = request.form['content']
+            cursor.execute("UPDATE comment SET content = %s where cmt_id = %s;", (content, cmt_id))
+            conn.commit()
+            flash('Edit Success!', 'success')
+        else:
+            flash("You are not the owner of this comment! You can't edit it.", 'warning')
         cursor.execute("SELECT msg_id FROM comment where cmt_id = %s;", (cmt_id,))
         m = cursor.fetchone()
-        flash('Edit Success!', 'success')
         return redirect(url_for('comment.show', msg_id=m['msg_id']))
 
     return render_template('comment/edit.html', m=m, cmt_id=cmt_id)
@@ -67,9 +71,12 @@ def edit(cmt_id):
 @mod.route('/delete/<int:cmt_id>', methods=['GET', 'POST'])
 def delete(cmt_id):
     if request.method == 'GET':
-        cursor.execute("SELECT msg_id FROM comment where cmt_id = %s;", (cmt_id,))
+        cursor.execute("SELECT msg_id, user_id FROM comment where cmt_id = %s;", (cmt_id,))
         m = cursor.fetchone()
-        cursor.execute("DELETE FROM comment where cmt_id = %s;", (cmt_id,))
-        conn.commit()
-        flash('Delete Success!', 'success')
+        if m['user_id'] == session['logged_id']:
+            cursor.execute("DELETE FROM comment where cmt_id = %s;", (cmt_id,))
+            conn.commit()
+            flash('Delete Success!', 'success')
+        else:
+            flash("You are not the owner of this comment! You can't delete it.", 'warning')
     return redirect(url_for('comment.show', msg_id=m['msg_id']))

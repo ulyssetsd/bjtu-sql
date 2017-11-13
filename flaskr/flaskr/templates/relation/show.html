@@ -1,18 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
   <div class="card mt-3">
-    <div class="card-body">
-		  <form action="{{ url_for('relation.search') }}" method=post>
-    	{{ forms.special_input('search', type='text', value=search, label='Nickname or email', placeholder='Nickname or email', send_label='Search it 🔍', add_pic=False) }}
-		  </form>
-		</div>
-	</div>
-  <div class="card mt-3">
-    <div class="card-header"><h2>My {{followings|length}} followings</h2></div>
+    <div class="card-header"><h2>{{followings|length}} followings</h2></div>
     <div class="card-body">
 	  {% for f in followings %}
 	    <li class="list-group-item">
-	      {{ f.nickname }} - {{ f.email }} <a href="/relation/unfollow/{{ f.user_id }}">unfollow</a>
+      {{ macros.user(user_id=f.user_id, nickname=f.nickname, email=f.email, is_followed=True) }}
 	    </li>
 	  {% else %}
 	    <li class="list-group-item"><em>Unbelievable. You following nobody.</em></li>
@@ -20,14 +13,11 @@
     </div>
   </div>
   <div class="card mt-3">
-    <div class="card-header"><h2>My {{followers|length}} followers</h2></div>
+    <div class="card-header"><h2>{{followers|length}} followers</h2></div>
     <div class="card-body">
 	  {% for f in followers %}
 	    <li class="list-group-item">
-	      {{ f.nickname }} - {{ f.email }} 
-	      {% if f.is_followed %} <a href="/relation/unfollow/{{ f.user_id }}">unfollow</a>
-	      {% else %} <a href="/relation/follow/{{ f.user_id }}">follow</a>
-	      {% endif %}
+      {{ macros.user(user_id=f.user_id, nickname=f.nickname, email=f.email, is_followed=f.is_followed) }}
 	    </li>
 	  {% else %}
 	    <li class="list-group-item"><em>Unbelievable. Nobody follow you.</em></li>
