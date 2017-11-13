@@ -41,9 +41,9 @@ def show_entries():
         cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], user_id))
         like = cursor.fetchone()
         if like is not None:
-            like_flag = 1
+            like_flag = True
         else:
-            like_flag = 0
+            like_flag = False
         m['like_flag'] = like_flag
         entries.append(m)
 
