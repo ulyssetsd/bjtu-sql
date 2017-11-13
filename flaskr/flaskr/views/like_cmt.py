@@ -17,7 +17,7 @@ def like(cmt_id):
         conn.commit()
         cursor.execute("SELECT msg_id FROM comment WHERE cmt_id = %s", (cmt_id,))
         c = cursor.fetchone()
-    return redirect(url_for('comment.show', msg_id=c['msg_id']))
+    return redirect(url_for('message.show', msg_id=c['msg_id']))
 
 
 @mod.route('/unlike/<int:cmt_id>', methods=['GET', 'POST'])
@@ -28,4 +28,4 @@ def unlike(cmt_id):
         conn.commit()
         cursor.execute("SELECT msg_id FROM comment WHERE cmt_id = %s", (cmt_id,))
         c = cursor.fetchone()
-    return redirect(url_for('comment.show', msg_id=c['msg_id']))
+    return redirect(url_for('message.show', msg_id=c['msg_id']))

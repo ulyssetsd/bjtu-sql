@@ -6,32 +6,6 @@ from datetime import datetime
 
 mod = Blueprint('comment', __name__, url_prefix='/comment',)
 
-
-@mod.route('/show/<int:msg_id>', methods=['GET', 'POST'])
-def show(msg_id):
-    user_id = session['logged_id']
-    if request.method == 'GET':
-        cursor.execute("SELECT * FROM message where msg_id = %s;", (msg_id,))
-        m = cursor.fetchone()
-        cursor.execute("SELECT * FROM comment where msg_id = %s ORDER BY c_time ASC;", (msg_id,))
-        cs = cursor.fetchall()
-        final_cs = []
-        for c in cs:
-            c = dict(c.items())
-            cursor.execute("SELECT nickname FROM users where user_id = %s", (c['user_id'],))
-            u = cursor.fetchone()
-            c['nickname'] = u['nickname']
-            cursor.execute("SELECT * FROM like_cmt where cmt_id = %s AND user_id = %s", (c['cmt_id'], user_id))
-            like = cursor.fetchone()
-            if like is not None:
-                like_flag = 1
-            else:
-                like_flag = 0
-            c['like_flag'] = like_flag
-            final_cs.append(c)
-    return render_template('comment/show.html', m=m, cs=final_cs, user_id=user_id)
-
-
 @mod.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
@@ -41,7 +15,7 @@ def add():
         c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cursor.execute("INSERT INTO comment(msg_id,user_id,content,c_time) VALUES(%s,%s,%s,%s);", (msg_id, user_id, content, c_time))
         conn.commit()
-    return redirect(url_for('comment.show', msg_id=msg_id))
+    return redirect(url_for('message.show', msg_id=msg_id))
 
 
 @mod.route('/edit/<int:cmt_id>', methods=['GET', 'POST'])
@@ -63,7 +37,7 @@ def edit(cmt_id):
             flash("You are not the owner of this comment! You can't edit it.", 'warning')
         cursor.execute("SELECT msg_id FROM comment where cmt_id = %s;", (cmt_id,))
         m = cursor.fetchone()
-        return redirect(url_for('comment.show', msg_id=m['msg_id']))
+        return redirect(url_for('message.show', msg_id=m['msg_id']))
 
     return render_template('comment/edit.html', m=m, cmt_id=cmt_id)
 
@@ -79,4 +53,4 @@ def delete(cmt_id):
             flash('Delete Success!', 'success')
         else:
             flash("You are not the owner of this comment! You can't delete it.", 'warning')
-    return redirect(url_for('comment.show', msg_id=m['msg_id']))
+    return redirect(url_for('message.show', msg_id=m['msg_id']))

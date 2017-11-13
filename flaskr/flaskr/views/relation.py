@@ -30,7 +30,7 @@ def list():
     return render_template('relation/show.html', followings=followings, followers=followers)
 
 @mod.route('/follow/<int:following_id>')
-def like(following_id):
+def follow(following_id):
     follower_id = session['logged_id']
     cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (following_id, follower_id))
     if cursor.fetchone() is None and following_id != follower_id:
@@ -42,7 +42,7 @@ def like(following_id):
     return redirect(redirect_url())
 
 @mod.route('/unfollow/<int:following_id>')
-def unlike(following_id):
+def unfollow(following_id):
     follower_id = session['logged_id']
     cursor.execute("DELETE FROM relation where following_id = %s AND follower_id = %s;", (following_id, follower_id))
     conn.commit()
