@@ -26,3 +26,13 @@
   <span class="float-right text-muted">{{ date }}</span>
 </div>
 {%- endmacro %}
+
+{% macro user(user_id='', nickname='', email='', is_followed=True) %}
+<img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+<div class="post-container"s>
+  {% if is_followed %} <a class="float-right btn btn-follow btn-outline-primary" href="/relation/unfollow/{{ user_id }}">unfollow</a>
+  {% else %} <a class="float-right btn btn-follow btn-primary" href="/relation/follow/{{ user_id }}">follow</a>
+  {% endif %}
+  <a href="" >@{{ nickname }}</a><br>{{ email }}
+</div>
+{% endmacro %}

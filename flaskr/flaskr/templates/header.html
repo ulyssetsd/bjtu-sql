@@ -1,15 +1,29 @@
+{% import 'forms.html' as forms %}
 {% import 'global_var.html' as GL %}
-<div class='container'>
-<nav class="navbar navbar-light">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="container">
   <a class="navbar-brand" href="{{ url_for('show_entries') }}"><span class="bg-primary rounded-circle" id="logo">{{ GL.APPLICATION_NAME_FIRST_LETTER }}</span>{{ GL.APPLICATION_NAME }}</a>
-  <div class="float-right align-middle">
-  {% if not session.logged_in %}
-    <a href="{{ url_for('users.login') }}">Login</a>
-  {% else %}
-    <a href="{{ url_for('relation.list') }}">{{ session.logged_email }}</a> / 
-    <a href="{{ url_for('users.edit') }}">Settings</a> / 
-    <a href="{{ url_for('users.logout') }}">Logout</a>
-  {% endif %}
-  </div>
-</nav>
+
+  <form action="{{ url_for('search.results') }}" method=post class="form-inline">
+    {{ forms.special_input('search', type='text', label='Search...', send_label='🔍', add_pic=False) }}
+  </form>
+  <ul class="navbar-nav">
+    {% if not session.logged_in %}
+      <li class="nav-item"><a class="nav-link" href="{{ url_for('users.login') }}">Login</a></li>
+    {% else %}
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ session.logged_email }}
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <a class="dropdown-item" href="{{ url_for('relation.list') }}">Relation</a>
+        <a class="dropdown-item" href="{{ url_for('users.edit') }}">Edit Profil</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item text-danger" href="{{ url_for('users.logout') }}">Logout</a>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
 </div>
+</nav>
