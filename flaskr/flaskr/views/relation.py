@@ -37,6 +37,8 @@ def like(following_id):
         c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cursor.execute("INSERT INTO relation(following_id, follower_id, c_time) VALUES(%s,%s,%s);", (following_id, follower_id, c_time))
         conn.commit()
+        cursor.execute("SELECT nickname FROM users WHERE user_id = %s;", (following_id,))
+        flash('You followed %s !' % cursor.fetchone()['nickname'], 'success')
     return redirect(redirect_url())
 
 @mod.route('/unfollow/<int:following_id>')
@@ -44,4 +46,6 @@ def unlike(following_id):
     follower_id = session['logged_id']
     cursor.execute("DELETE FROM relation where following_id = %s AND follower_id = %s;", (following_id, follower_id))
     conn.commit()
+    cursor.execute("SELECT nickname FROM users WHERE user_id = %s;", (following_id,))
+    flash('You unfollowed %s !' % cursor.fetchone()['nickname'], 'success')
     return redirect(redirect_url())
