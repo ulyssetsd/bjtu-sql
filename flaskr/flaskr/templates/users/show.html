@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div class="card mt-3">
+    <div class="card-body">
+      {{ macros.user(user_id=u.user_id, nickname=u.nickname, email=u.email, is_me=user_id==u.user_id, is_followed=u.is_followed)  }}
+    </div>
+  </div>
+  <div class="card mt-3 stream">
+  <ul class="entries list-group list-group-flush">
+  {% for m in ms %}
+    <li class="list-group-item">
+      {{ macros.message(id=m.msg_id, content=m.content, nickname=m.nickname, user_id=m.user_id, like=m.like_flag, date=m.c_time, is_mine=m.user_id==user_id) }}
+    </li>
+  {% else %}
+    <li class="list-group-item"><em>Unbelievable. No messages here so far</em></li>
+  {% endfor %}
+  </ul>
+  </div>
+{% endblock %}

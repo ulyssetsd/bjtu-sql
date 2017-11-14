@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div class="card mt-3">
+    <div class="card-header"><h2>{{followings|length}} followings</h2></div>
+    <div class="card-body">
+	  {% for f in followings %}
+	    <li class="list-group-item">
+      {{ macros.user(user_id=f.user_id, nickname=f.nickname, email=f.email, is_followed=True) }}
+	    </li>
+	  {% else %}
+	    <li class="list-group-item"><em>Unbelievable. You following nobody.</em></li>
+	  {% endfor %}
+    </div>
+  </div>
+  <div class="card mt-3">
+    <div class="card-header"><h2>{{followers|length}} followers</h2></div>
+    <div class="card-body">
+	  {% for f in followers %}
+	    <li class="list-group-item">
+      {{ macros.user(user_id=f.user_id, nickname=f.nickname, email=f.email, is_followed=f.is_followed) }}
+	    </li>
+	  {% else %}
+	    <li class="list-group-item"><em>Unbelievable. Nobody follow you.</em></li>
+	  {% endfor %}
+    </div>
+  </div>
+{% endblock %}

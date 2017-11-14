@@ -1,28 +1,41 @@
-{% macro message(id='', content='', nickname='', like='', date='', is_comment=False) -%}
+{% macro message(id='', content='', nickname='', user_id='', like=False, date='', is_comment=False, add_pic=True, is_mine=False) -%}
+{% if add_pic %}
 <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+{% endif %}
 <div class="post-container">
-  <a href="" >@{{ nickname }}</a> {{ content|safe }}<br>
-
-	{% if is_comment %}
-    <a href='/../comment/edit/{{ id }}' class="card-link">Edit</a>
-    <a href='/../comment/delete/{{ id }}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
-    {% if like == 1 %}
-      <a href='/../like_cmt/unlike/{{ id }}'class="card-link">Unlike</a>
-    {% else %}
-      <a href='/../like_cmt/like/{{ id }}' class="card-link">Like</a>
+  <a href="{{ url_for('users.show', user_id=user_id) }}" >@{{ nickname }}</a> {{ content|safe }}<br>
+  {% if not is_comment %}
+    {% if like %}
+      <a href="{{ url_for('like_msg.unlike', msg_id=id) }}" class="card-link">Unlike</a>
+    {% elif not like %}
+      <a href="{{ url_for('like_msg.like', msg_id=id) }}" class="card-link">Like</a>
     {% endif %}
-    
+    <a href="{{ url_for('message.show', msg_id=id) }}" class="card-link">Comment</a>
+    {% if is_mine %}
+      <a href="{{ url_for('message.edit', msg_id=id) }}" class="card-link">Edit</a>
+      <a href="{{ url_for('message.delete', msg_id=id) }}" onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
+    {% endif %}
   {% else %}
-    <a href='message/edit/{{ id }}' class="card-link">Edit</a>
-    <a href='message/delete/{{ id }}' onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
-    <a href='comment/show/{{ id }}' class="card-link">Comment</a>
-    {% if like == 1 %}
-      <a href='like_msg/unlike/{{ id }}'class="card-link">Unlike</a>
-    {% else %}
-      <a href='like_msg/like/{{ id }}' class="card-link">Like</a>
+    {% if like %}
+      <a href="{{ url_for('like_cmt.unlike', cmt_id=id) }}" class="card-link">Unlike</a>
+    {% elif not like %}
+      <a href="{{ url_for('like_cmt.like', cmt_id=id) }}" class="card-link">Like</a>
     {% endif %}
-	{% endif %}
-
+    {% if is_mine %}
+      <a href="{{ url_for('comment.edit', cmt_id=id) }}" class="card-link">Edit</a>
+      <a href="{{ url_for('comment.delete', cmt_id=id) }}" onclick="return confirm('Are you sure to delete it?')" class="card-link">Delete</a>
+    {% endif %}
+  {% endif %}
   <span class="float-right text-muted">{{ date }}</span>
 </div>
 {%- endmacro %}
+
+{% macro user(user_id='', nickname='', email='', is_followed=True, is_me=False) %}
+<img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+<div class="post-container"s>
+  {% if not is_me and is_followed %} <a class="float-right btn btn-follow btn-outline-primary" href="{{ url_for('relation.unfollow', following_id=user_id) }}">unfollow</a>
+  {% elif not is_me and not is_followed %} <a class="float-right btn btn-follow btn-primary" href="{{ url_for('relation.follow', following_id=user_id) }}">follow</a>
+  {% endif %}
+  <a href="{{ url_for('users.show', user_id=user_id) }}" >@{{ nickname }}</a><br>{{ email }}
+</div>
+{% endmacro %}

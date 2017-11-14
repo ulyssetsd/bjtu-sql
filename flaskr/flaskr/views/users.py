@@ -8,6 +8,41 @@ import re
 app = Flask(__name__)
 mod = Blueprint('users', __name__, url_prefix='/users',)
 
+@mod.route('/me')
+def show_me():
+    user_id = session['logged_id']
+    return redirect(url_for('users.show', user_id=user_id))
+
+@mod.route('/<int:user_id>', methods=['GET', 'POST'])
+def show(user_id):
+    user_id_to_show = user_id
+    user_id = session['logged_id']
+    cursor.execute("SELECT * FROM users where user_id = %s;", (user_id_to_show,))
+    u = cursor.fetchone()
+    u = dict(u.items())
+    cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (u['user_id'], user_id))
+    if cursor.fetchone() is None:
+        u['is_followed'] = False
+    else:
+        u['is_followed'] = True
+    cursor.execute("SELECT * FROM message where user_id = %s ORDER BY c_time DESC;", (user_id_to_show,))
+    ms = cursor.fetchall()
+    entries = []
+    for m in ms:
+        m = dict(m.items())
+        cursor.execute("SELECT nickname FROM users where user_id = %s", (m['user_id'],))
+        u_tmp = cursor.fetchone()
+        m['nickname'] = u_tmp['nickname']
+        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], user_id))
+        like = cursor.fetchone()
+        if like is not None:
+            like_flag = True
+        else:
+            like_flag = False
+        m['like_flag'] = like_flag
+        entries.append(m)
+    ms=entries
+    return render_template('users/show.html', u=u, ms=ms, user_id=user_id)
 
 @mod.route('/register', methods=['GET', 'POST'])
 def register():
@@ -41,7 +76,7 @@ def register():
             flash('Register Success!', 'success')
             return redirect(url_for('users.login'))
 
-    return render_template('register.html')
+    return render_template('users/register.html')
 
 
 @mod.route('/login', methods=['GET', 'POST'])
@@ -72,7 +107,7 @@ def login():
                 session['logged_id'] = u['user_id']
                 return redirect(url_for('show_entries'))
 
-    return render_template('login.html', email=email)
+    return render_template('users/login.html', email=email)
 
 
 @mod.route('/logout', methods=['GET', 'POST'])

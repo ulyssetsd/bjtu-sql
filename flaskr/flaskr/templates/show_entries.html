@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
   {% if session.logged_in %}
-  <div class="card">
+  <div class="card mt-3">
     <div class="card-body">
       <form action="{{ url_for('message.add') }}" method=post class=add-entry>
         {{ forms.special_input('content', type='text', placeholder='New post ...') }}
@@ -13,7 +13,7 @@
   <ul class="entries list-group list-group-flush">
   {% for entry in entries %}
     <li class="list-group-item">
-      {{ macros.message(id=entry.msg_id, content=entry.content, nickname=entry.nickname, like=entry.like_flag, date=entry.c_time) }}
+      {{ macros.message(id=entry.msg_id, content=entry.content, nickname=entry.nickname, user_id=entry.user_id, like=entry.like_flag, date=entry.c_time, is_mine=entry.user_id==user_id) }}
     </li>
   {% else %}
     <li class="list-group-item"><em>Unbelievable.  No messages here so far</em></li>

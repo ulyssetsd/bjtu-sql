@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block cardtitle %}
+  <h2>Search's results</h2>
+{% endblock %}
+{% block cardbody %}
+  <form action="{{ url_for('search.results') }}" method=post>
+    {{ forms.special_input('search', type='text', value=search, label='Search...', send_label='Search it 🔍', add_pic=False) }}
+  </form>
+  <hr/>
+  {% for u in users %}
+    <li class="list-group-item">
+      {{ macros.user(user_id=u.user_id, nickname=u.nickname, email=u.email, is_followed=u.is_followed) }}
+    </li>
+  {% else %}
+    <li class="list-group-item"><em>No results.</em></li>
+  {% endfor %}
+{% endblock %}
