@@ -2,6 +2,7 @@
 from flask import Flask, Blueprint, render_template, redirect, request,\
     url_for, session, flash
 from database import conn, cursor
+from datetime import datetime
 import re
 
 app = Flask(__name__)
@@ -15,6 +16,7 @@ def register():
         nickname = request.form['nickname'].strip()
         password = request.form['password'].strip()
         password2 = request.form['password2'].strip()
+        c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         email = email.lower()
 
@@ -33,8 +35,8 @@ def register():
         elif len(password) < 6:
             flash('The password has at least 6 characters', 'danger')
         else:
-            cursor.execute("INSERT INTO users(email,nickname,password) VALUES(%s,%s,crypt(%s, gen_salt('bf', 8)));", \
-                (email, nickname, password))
+            cursor.execute("INSERT INTO users(email,nickname,password,c_time) VALUES(%s,%s,crypt(%s, gen_salt('bf', 8)),%s);", \
+                (email, nickname, password, c_time))
             conn.commit()
             flash('Register Success!', 'success')
             return redirect(url_for('users.login'))
