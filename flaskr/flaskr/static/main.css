@@ -62,3 +62,7 @@ li.comment .profil-pic {
 .btn-follow {
 	margin-top:0.3rem;
 }
+
+.dropdown-menu.show {
+    position: absolute !important;
+}
