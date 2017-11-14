@@ -10,14 +10,8 @@ def add_informations(follows, user_id):
     for f in follows:
         f = dict(f.items())
         cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (f['user_id'], user_id))
-        if cursor.fetchone() is None:
-            f['is_followed'] = False
-        else:
-            f['is_followed'] = True
-        if f['user_id'] == user_id:
-            f['is_me'] = True
-        else:
-            f['is_me'] = False
+        f['is_followed'] = cursor.fetchone() is not None
+        f['is_me'] = f['user_id'] == user_id
         tmp_follows.append(f)
     return tmp_follows
 

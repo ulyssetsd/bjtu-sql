@@ -2,17 +2,17 @@
 {% block body %}
   <div class="card mt-3">
     <div class="card-body">
-      {{ macros.user(user_id=u.user_id, nickname=u.nickname, email=u.email, is_me=user_id==u.user_id, is_followed=u.is_followed)  }}
+      {{ macros.user(user_id=u.user_id, nickname=u.nickname, email=u.email, is_me=u.is_me, is_followed=u.is_followed)  }}
     </div>
     <div class="card-body border border-left-0 border-right-0 border-bottom-0">
-      {{ macros.user_informations(user_id=u.user_id, is_me=user_id==u.user_id)  }}
+      {{ macros.user_informations(user_id=u.user_id, is_me=u.is_me)  }}
     </div>
   </div>
   <div class="card mt-3 stream">
   <ul class="entries list-group list-group-flush">
   {% for m in ms %}
     <li class="list-group-item">
-      {{ macros.message(id=m.msg_id, content=m.content, nickname=m.nickname, user_id=m.user_id, like=m.like_flag, date=m.c_time, is_mine=m.user_id==user_id) }}
+      {{ macros.message(id=m.msg_id, content=m.content, nickname=m.nickname, user_id=m.user_id, like=m.like_flag, date=m.c_time, is_mine=m.is_mine) }}
     </li>
   {% else %}
     <li class="list-group-item"><em>Unbelievable. No messages here so far</em></li>

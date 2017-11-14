@@ -35,18 +35,14 @@ def show_entries():
     for m in ms:
         m = dict(m.items())
         cursor.execute("SELECT nickname FROM users where user_id = %s", (m['user_id'],))
-        u = cursor.fetchone()
-        m['nickname'] = u['nickname']
+        m['nickname'] = cursor.fetchone()['nickname']
         cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], session['logged_id']))
-        like = cursor.fetchone()
-        if like is not None:
-            like_flag = True
-        else:
-            like_flag = False
-        m['like_flag'] = like_flag
+        m['like_flag'] = cursor.fetchone() is not None
+        m['is_mine'] = m['user_id'] == session['logged_id']
         entries.append(m)
+    ms=entries
 
-    return render_template('show_entries.html', entries=entries, user_id=session['logged_id'])
+    return render_template('show_entries.html', ms=ms)
 
 
 @app.route('/add', methods=['POST'])
