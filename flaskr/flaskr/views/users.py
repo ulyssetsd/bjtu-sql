@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, Blueprint, render_template, redirect, request,\
     url_for, session, flash
-from database import conn, cursor
+from helpers import conn, cursor
 import re
 
 app = Flask(__name__)

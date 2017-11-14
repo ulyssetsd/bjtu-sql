@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from datetime import datetime
-from database import Base
+from helpers import Base
 
 
 class Users(Base):

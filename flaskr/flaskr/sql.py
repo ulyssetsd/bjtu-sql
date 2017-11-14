@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from database import conn, cursor
+from helpers import conn, cursor
 
 sql = "CREATE TABLE users ( " + \
       "user_id serial primary key not null, " + \

@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, Blueprint, render_template, redirect, request,\
     url_for, session, flash
-from database import conn, cursor
+from helpers import conn, cursor, redirect_url
 from datetime import datetime
-
-def redirect_url(): # function for going to the previous page (didn't work with POST page)
-    return request.args.get('next') or \
-           request.referrer or \
-           url_for('index')
 
 app = Flask(__name__)
 mod = Blueprint('like_msg', __name__, url_prefix='/message',)

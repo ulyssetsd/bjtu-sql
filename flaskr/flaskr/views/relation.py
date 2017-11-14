@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, redirect, request, url_for, session, flash
-from database import conn, cursor
+from helpers import conn, cursor, redirect_url
 from datetime import datetime
-
-def redirect_url():
-    return request.args.get('next') or \
-           request.referrer or \
-           url_for('index')
 
 mod = Blueprint('relation', __name__, url_prefix='/relation',)
 

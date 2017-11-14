@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, session, url_for
-from database import conn, cursor
+from helpers import conn, cursor
 
 
 app = Flask(__name__)  # create the application instance :)
