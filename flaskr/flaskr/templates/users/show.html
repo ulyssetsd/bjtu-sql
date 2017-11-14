@@ -4,6 +4,9 @@
     <div class="card-body">
       {{ macros.user(user_id=u.user_id, nickname=u.nickname, email=u.email, is_me=user_id==u.user_id, is_followed=u.is_followed)  }}
     </div>
+    <div class="card-body border border-left-0 border-right-0 border-bottom-0">
+      {{ macros.user_informations(user_id=u.user_id, is_me=user_id==u.user_id)  }}
+    </div>
   </div>
   <div class="card mt-3 stream">
   <ul class="entries list-group list-group-flush">

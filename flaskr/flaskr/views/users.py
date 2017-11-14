@@ -9,22 +9,19 @@ mod = Blueprint('users', __name__, url_prefix='/users',)
 
 @mod.route('/me')
 def show_me():
-    user_id = session['logged_id']
-    return redirect(url_for('users.show', user_id=user_id))
+    return redirect(url_for('users.show', user_id=session['logged_id']))
 
 @mod.route('/<int:user_id>', methods=['GET', 'POST'])
 def show(user_id):
-    user_id_to_show = user_id
-    user_id = session['logged_id']
-    cursor.execute("SELECT * FROM users where user_id = %s;", (user_id_to_show,))
+    cursor.execute("SELECT * FROM users where user_id = %s;", (user_id,))
     u = cursor.fetchone()
     u = dict(u.items())
-    cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (u['user_id'], user_id))
+    cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (u['user_id'], session['logged_id']))
     if cursor.fetchone() is None:
         u['is_followed'] = False
     else:
         u['is_followed'] = True
-    cursor.execute("SELECT * FROM message where user_id = %s ORDER BY c_time DESC;", (user_id_to_show,))
+    cursor.execute("SELECT * FROM message where user_id = %s ORDER BY c_time DESC;", (user_id,))
     ms = cursor.fetchall()
     entries = []
     for m in ms:
@@ -32,7 +29,7 @@ def show(user_id):
         cursor.execute("SELECT nickname FROM users where user_id = %s", (m['user_id'],))
         u_tmp = cursor.fetchone()
         m['nickname'] = u_tmp['nickname']
-        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], user_id))
+        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], session['logged_id']))
         like = cursor.fetchone()
         if like is not None:
             like_flag = True
@@ -41,7 +38,7 @@ def show(user_id):
         m['like_flag'] = like_flag
         entries.append(m)
     ms=entries
-    return render_template('users/show.html', u=u, ms=ms, user_id=user_id)
+    return render_template('users/show.html', u=u, ms=ms, user_id=session['logged_id'])
 
 @mod.route('/register', methods=['GET', 'POST'])
 def register():

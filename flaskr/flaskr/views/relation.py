@@ -5,23 +5,34 @@ from datetime import datetime
 
 mod = Blueprint('relation', __name__, url_prefix='/relation',)
 
-@mod.route('/')
-def list():
-    user_id = session['logged_id']
-    cursor.execute("SELECT * FROM relation, users WHERE user_id = follower_id AND following_id = %s;", (user_id,))
-    followers = cursor.fetchall()
-    cursor.execute("SELECT * FROM relation, users WHERE user_id = following_id AND follower_id = %s;", (user_id,))
-    followings = cursor.fetchall()
-    tmp_followers = []
-    for f in followers:
+def add_informations(follows, user_id):
+    tmp_follows = []
+    for f in follows:
         f = dict(f.items())
         cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (f['user_id'], user_id))
         if cursor.fetchone() is None:
             f['is_followed'] = False
         else:
             f['is_followed'] = True
-        tmp_followers.append(f)
-    followers = tmp_followers
+        if f['user_id'] == user_id:
+            f['is_me'] = True
+        else:
+            f['is_me'] = False
+        tmp_follows.append(f)
+    return tmp_follows
+
+@mod.route('/me')
+def show_me():
+    return redirect(url_for('relation.show', user_id=session['logged_id']))
+
+@mod.route('/<int:user_id>')
+def show(user_id):
+    cursor.execute("SELECT * FROM relation, users WHERE user_id = follower_id AND following_id = %s;", (user_id,))
+    followers = cursor.fetchall()
+    cursor.execute("SELECT * FROM relation, users WHERE user_id = following_id AND follower_id = %s;", (user_id,))
+    followings = cursor.fetchall()
+    followings = add_informations(followings, session['logged_id'])
+    followers = add_informations(followers, session['logged_id'])
     return render_template('relation/show.html', followings=followings, followers=followers)
 
 @mod.route('/follow/<int:following_id>')

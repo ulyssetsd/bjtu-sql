@@ -25,11 +25,10 @@ app.register_blueprint(search.mod)
 def show_entries():
     if not session.get('logged_in'):
         return redirect(url_for('users.login'))
-    user_id = session['logged_id']
-    cursor.execute("SELECT following_id FROM relation where follower_id = %s", (user_id,))
+    cursor.execute("SELECT following_id FROM relation where follower_id = %s", (session['logged_id'],))
     ms = cursor.fetchall()
     list_user_id = [d['following_id'] for d in ms if 'following_id' in d]
-    list_user_id.append(user_id)
+    list_user_id.append(session['logged_id'])
     cursor.execute("SELECT * FROM message where user_id IN %s ORDER BY c_time DESC", (tuple(list_user_id),))
     ms = cursor.fetchall()
     entries = []
@@ -38,7 +37,7 @@ def show_entries():
         cursor.execute("SELECT nickname FROM users where user_id = %s", (m['user_id'],))
         u = cursor.fetchone()
         m['nickname'] = u['nickname']
-        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], user_id))
+        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], session['logged_id']))
         like = cursor.fetchone()
         if like is not None:
             like_flag = True
@@ -47,7 +46,7 @@ def show_entries():
         m['like_flag'] = like_flag
         entries.append(m)
 
-    return render_template('show_entries.html', entries=entries, user_id=user_id)
+    return render_template('show_entries.html', entries=entries, user_id=session['logged_id'])
 
 
 @app.route('/add', methods=['POST'])
