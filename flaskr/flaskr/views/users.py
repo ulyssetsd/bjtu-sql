@@ -3,6 +3,7 @@ from flask import Flask, Blueprint, render_template, redirect, request,\
     url_for, session, flash
 from datetime import datetime
 from helpers import conn, cursor
+from views import comment, like_msg
 import re
 
 app = Flask(__name__)
@@ -30,6 +31,8 @@ def show(user_id):
         cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], session['logged_id']))
         m['like_flag'] = cursor.fetchone() is not None
         m['is_mine'] = m['user_id'] == session['logged_id']
+        m['like_num'] = like_msg.countlike(m['msg_id'])
+        m['cmt_num'] = comment.countcmt(m['msg_id'])
         entries.append(m)
     ms=entries
     return render_template('users/show.html', u=u, ms=ms)
