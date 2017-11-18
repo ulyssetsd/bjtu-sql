@@ -29,3 +29,9 @@ def unlike(msg_id):
         cursor.execute("DELETE FROM like_msg where msg_id = %s AND user_id = %s;", (msg_id, user_id))
         conn.commit()
     return redirect(redirect_url())
+
+
+def countlike(msg_id):
+    cursor.execute("SELECT COUNT(*) FROM like_msg where msg_id = %s;", (msg_id,))
+    like_num = cursor.fetchone()
+    return like_num[0]

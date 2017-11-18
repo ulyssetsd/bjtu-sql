@@ -45,6 +45,8 @@ def show_entries():
         else:
             like_flag = False
         m['like_flag'] = like_flag
+        m['like_num'] = like_msg.countlike(m['msg_id'])
+        m['cmt_num'] = comment.countcmt(m['msg_id'])
         entries.append(m)
 
     return render_template('show_entries.html', entries=entries, user_id=user_id)

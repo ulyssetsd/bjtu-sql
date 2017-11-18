@@ -54,3 +54,9 @@ def delete(cmt_id):
         else:
             flash("You are not the owner of this comment! You can't delete it.", 'warning')
     return redirect(url_for('message.show', msg_id=m['msg_id']))
+
+
+def countcmt(msg_id):
+    cursor.execute("SELECT COUNT(*) FROM comment where msg_id = %s;", (msg_id,))
+    like_num = cursor.fetchone()
+    return like_num[0]

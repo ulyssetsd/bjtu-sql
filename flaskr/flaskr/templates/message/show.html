@@ -15,7 +15,7 @@
     {% endif %}
     {% for c in cs %}
     <li class="list-group-item comment">
-      {{ macros.message(id=c.cmt_id, content=c.content, nickname=c.nickname, user_id=c.user_id, like=c.like_flag, date=c.c_time, is_comment=True, is_mine=c.user_id==user_id) }}
+      {{ macros.message(id=c.cmt_id, content=c.content, nickname=c.nickname, user_id=c.user_id, like=c.like_flag, date=c.c_time, is_comment=True, is_mine=c.user_id==user_id, like_num=c.like_num) }}
     </li>
     {% else %}
       <li class="list-group-item"><em>Unbelievable.  No messages here so far</em></li>

@@ -29,3 +29,9 @@ def unlike(cmt_id):
         cursor.execute("SELECT msg_id FROM comment WHERE cmt_id = %s", (cmt_id,))
         c = cursor.fetchone()
     return redirect(url_for('message.show', msg_id=c['msg_id']))
+
+
+def countlike(cmt_id):
+    cursor.execute("SELECT COUNT(*) FROM like_cmt where cmt_id = %s;", (cmt_id,))
+    like_num = cursor.fetchone()
+    return like_num[0]

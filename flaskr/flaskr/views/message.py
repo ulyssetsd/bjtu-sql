@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, request,\
     url_for, session, flash
 from database import conn, cursor
 from datetime import datetime
+from views import like_cmt
 
 mod = Blueprint('message', __name__, url_prefix='/message',)
 
@@ -28,6 +29,7 @@ def show(msg_id):
             else:
                 like_flag = 0
             c['like_flag'] = like_flag
+            c['like_num'] = like_cmt.countlike(c['cmt_id'])
             final_cs.append(c)
     return render_template('message/show.html', m=m, cs=final_cs, user_id=user_id)
 
