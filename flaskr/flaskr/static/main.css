@@ -2,19 +2,19 @@
     background-color: #f7f7f7;
 }
 .profil-pic {
-	position: absolute; 
+	position: absolute;
 	height: 40px;
 }
 .my-profil .profil-pic {
 	height: 64px;
 }
 .stream .profil-pic {
-	left: 20px; 
-	top: 14px; 
+	left: 20px;
+	top: 14px;
 }
 .new-post .profil-pic {
-	left: 20px; 
-	top: 17px; 
+	left: 20px;
+	top: 17px;
 }
 
 .post-container {

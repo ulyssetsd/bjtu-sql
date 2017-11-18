@@ -39,8 +39,12 @@ def add():
         user_id = session['logged_id']
         content = request.form['content']
         c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cursor.execute("INSERT INTO message(user_id,content,c_time) VALUES(%s,%s,%s);", (user_id, content, c_time))
-        conn.commit()
+
+        if content == "":
+            flash('Do not send null ', 'warning')
+        else:
+            cursor.execute("INSERT INTO message(user_id,content,c_time) VALUES(%s,%s,%s);", (user_id, content, c_time))
+            conn.commit()
     return redirect(url_for('show_entries'))
 
 
