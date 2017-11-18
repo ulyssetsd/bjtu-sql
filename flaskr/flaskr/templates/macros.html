@@ -33,9 +33,17 @@
 {% macro user(user_id='', nickname='', email='', is_followed=True, is_me=False) %}
 <img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
 <div class="post-container"s>
-  {% if not is_me and is_followed %} <a class="float-right btn btn-follow btn-outline-primary" href="{{ url_for('relation.unfollow', following_id=user_id) }}">unfollow</a>
-  {% elif not is_me and not is_followed %} <a class="float-right btn btn-follow btn-primary" href="{{ url_for('relation.follow', following_id=user_id) }}">follow</a>
+  {% if not is_me and is_followed %} <a class="float-right btn btn-follow btn-outline-primary ml-1" href="{{ url_for('relation.unfollow', following_id=user_id) }}">unfollow</a>
+  {% elif not is_me and not is_followed %} <a class="float-right btn btn-follow btn-primary ml-1" href="{{ url_for('relation.follow', following_id=user_id) }}">follow</a>
   {% endif %}
-  <a href="{{ url_for('users.show', user_id=user_id) }}" >@{{ nickname }}</a><br>{{ email }}
+  <a href="{{ url_for('users.show', user_id=user_id) }}" >@{{ nickname }}</a><br>{{ email }}<br>
 </div>
+{% endmacro %}
+
+{% macro user_informations(user_id='', is_me=False) %}
+<a class="card-link post-container" href="{{ url_for('relation.show', user_id=user_id) }}" >Relations</a>
+{% if is_me %}
+  <a class="card-link" href="{{ url_for('users.edit') }}" >Edit Profil</a>
+  <a class="card-link text-danger float-right" href="{{ url_for('users.logout') }}" >Logout</a>
+{% endif %}
 {% endmacro %}

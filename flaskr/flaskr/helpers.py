@@ -15,7 +15,7 @@
     #import models
     #Base.metadata.create_all(bind=engine)
 
-
+from flask import request, url_for
 import psycopg2
 import psycopg2.extras
 
@@ -28,3 +28,8 @@ except Exception as e:
 
 cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
+
+def redirect_url():
+    return request.args.get('next') or \
+           request.referrer or \
+           url_for('index')

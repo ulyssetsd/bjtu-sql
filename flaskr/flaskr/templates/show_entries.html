@@ -11,9 +11,9 @@
   {% endif %}
   <div class="card mt-3 stream">
   <ul class="entries list-group list-group-flush">
-  {% for entry in entries %}
+  {% for m in ms %}
     <li class="list-group-item">
-      {{ macros.message(id=entry.msg_id, content=entry.content, nickname=entry.nickname, user_id=entry.user_id, like=entry.like_flag, date=entry.c_time, is_mine=entry.user_id==user_id,like_num=entry.like_num, cmt_num=entry.cmt_num) }}
+      {{ macros.message(id=m.msg_id, content=m.content, nickname=m.nickname, user_id=m.user_id, like=m.like_flag, date=m.c_time, is_mine=m.is_mine, like_num=m.like_num, cmt_num=m.cmt_num) }}
     </li>
   {% else %}
     <li class="list-group-item"><em>Unbelievable.  No messages here so far</em></li>

@@ -5,7 +5,7 @@
     <div class="card-body">
 	  {% for f in followings %}
 	    <li class="list-group-item">
-      {{ macros.user(user_id=f.user_id, nickname=f.nickname, email=f.email, is_followed=True) }}
+      {{ macros.user(user_id=f.user_id, nickname=f.nickname, email=f.email, is_followed=f.is_followed, is_me=f.is_me) }}
 	    </li>
 	  {% else %}
 	    <li class="list-group-item"><em>Unbelievable. You following nobody.</em></li>
@@ -17,7 +17,7 @@
     <div class="card-body">
 	  {% for f in followers %}
 	    <li class="list-group-item">
-      {{ macros.user(user_id=f.user_id, nickname=f.nickname, email=f.email, is_followed=f.is_followed) }}
+      {{ macros.user(user_id=f.user_id, nickname=f.nickname, email=f.email, is_followed=f.is_followed, is_me=f.is_me) }}
 	    </li>
 	  {% else %}
 	    <li class="list-group-item"><em>Unbelievable. Nobody follow you.</em></li>
