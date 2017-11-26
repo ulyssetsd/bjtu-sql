@@ -7,7 +7,7 @@ from datetime import datetime
 
 # import flaskr.database
 # from flaskr.flaskr2 import db_getEntries2
-from flaskr.requete import *
+from requete import *
 
 
 class FlaskrTestCase(unittest.TestCase):
@@ -67,12 +67,13 @@ class FlaskrTestCase(unittest.TestCase):
 
 	def test_userByEmail(self):
 		emailTest = self.emailGeneral
+		c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 		self.cleanEmail(emailTest)
 		u = self.ptrUserByEmail(emailTest)
 		if u is None:
 			# User NONE
-			self.ptrUserCreate(emailTest, "jean", "pierrePaul")
+			self.ptrUserCreate(emailTest, "jean", "pierrePaul", c_time)
 			# User exist
 			u = self.ptrUserByEmail(emailTest)
 			if u is None:
@@ -83,13 +84,14 @@ class FlaskrTestCase(unittest.TestCase):
 
 	def test_userCreate(self):
 		emailTest = self.emailGeneral
+		c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 		self.cleanEmail(emailTest)
 		u = self.ptrUserByEmail(emailTest)
 		if u is not None:
 			userDelete(emailTest)
 		# User NONE
-		self.ptrUserCreate(emailTest, "jean", "pierrePaul")
+		self.ptrUserCreate(emailTest, "jean", "pierrePaul", c_time)
 		# User exist
 		u = self.ptrUserByEmail(emailTest)
 		if u is None:
@@ -100,12 +102,13 @@ class FlaskrTestCase(unittest.TestCase):
 
 	def test_userDelete(self):
 		emailTest = self.emailGeneral
+		c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 		self.cleanEmail(emailTest)
 		u = self.ptrUserByEmail(emailTest)
 		if u is None:
 			# User NONE
-			self.ptrUserCreate(emailTest, "jean", "pierrePaul")
+			self.ptrUserCreate(emailTest, "jean", "pierrePaul", c_time)
 			# User exist
 		u = self.ptrUserByEmail(emailTest)
 		if u is not None:
@@ -118,21 +121,23 @@ class FlaskrTestCase(unittest.TestCase):
 	
 	def test_userIdByEmailPassword(self):
 		emailTest = self.emailGeneral
+		c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 		self.cleanEmail(emailTest)
-		self.ptrUserCreate(emailTest, "jean", "pierrePaul")
+		self.ptrUserCreate(emailTest, "jean", "pierrePaul", c_time)
 		userSave = self.ptrUserByEmail(emailTest)
-		userId = self.ptrUserIdByEmailPassword(emailTest, "pierrePaul")
-		if userId == userSave[0]:
+		user = self.ptrUserIdByEmailPassword(emailTest, "pierrePaul")
+		if user['user_id'] == userSave['user_id']:
 			self.display('test_userIdByEmailPassword', "")
 			return ""
 		self.display('test_userIdByEmailPassword', 'Erreur perso...', 1)
 
 	def test_userUpdateNicknameByEmail(self):
 		emailTest = self.emailGeneral
+		c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 		self.cleanEmail(emailTest)
-		self.ptrUserCreate(emailTest, "jean", "pierrePaul")
+		self.ptrUserCreate(emailTest, "jean", "pierrePaul", c_time)
 		userSave = self.ptrUserByEmail(emailTest)
 		self.ptrUserUpdateNicknameByEmail('thomas', emailTest)
 		userSave2 = self.ptrUserByEmail(emailTest)
@@ -143,9 +148,10 @@ class FlaskrTestCase(unittest.TestCase):
 
 	def test_userUpdatePasswordByEmail(self):
 		emailTest = self.emailGeneral
+		c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 		self.cleanEmail(emailTest)
-		self.ptrUserCreate(emailTest, "jean", "pierrePaul")
+		self.ptrUserCreate(emailTest, "jean", "pierrePaul", c_time)
 		userSave = self.ptrUserByEmail(emailTest)
 		self.ptrUserUpdatePasswordByEmail("monNewMdp", emailTest)
 		userSave2 = self.ptrUserByEmail(emailTest)

@@ -4,6 +4,7 @@ from flask import Flask, Blueprint, render_template, redirect, request,\
 from datetime import datetime
 from helpers import conn, cursor
 from views import comment, like_msg
+from requete import userByEmail, userIdByEmailPassword, userCreate, userUpdateNicknameByEmail, userUpdatePasswordByEmail
 import re
 
 app = Flask(__name__)
@@ -48,8 +49,7 @@ def register():
 
         email = email.lower()
 
-        cursor.execute("SELECT * FROM users where email = %s;", (email,))
-        u = cursor.fetchone()
+        u = userByEmail(email)
 
         if email == "" or nickname == "" or password == "" or password2 == "":
             flash('Please input all the information', 'danger')
@@ -63,9 +63,7 @@ def register():
         elif len(password) < 6:
             flash('The password has at least 6 characters', 'danger')
         else:
-            cursor.execute("INSERT INTO users(email,nickname,password,c_time) VALUES(%s,%s,crypt(%s, gen_salt('bf', 8)),%s);", \
-                (email, nickname, password, c_time))
-            conn.commit()
+            userCreate(email, nickname, password, c_time)
             flash('Register Success!', 'success')
             return redirect(url_for('users.login'))
 
@@ -82,16 +80,13 @@ def login():
         password = request.form['password'].strip()
 
         email = email.lower()
-
-        cursor.execute("SELECT password,user_id FROM users where email = %s;", (email,))
-        u = cursor.fetchone()
+        u = userByEmail(email)
 
         if u is None:
             flash("The user doesn\'t exsit.Please register first.", 'danger')
 
         else:
-            cursor.execute("SELECT user_id FROM users WHERE email = %s AND password = crypt(%s, password);", (email, password))
-            u = cursor.fetchone()
+            u = userIdByEmailPassword(email, password)
             if u is None:
                 flash("Your password is wrong.Try it again.", 'danger')
             else:
@@ -113,11 +108,9 @@ def logout():
 @mod.route('/edit', methods=['GET', 'POST'])
 def edit():
     if request.method == 'POST':
-        cursor.execute("UPDATE users SET nickname = %s where email = %s", (request.form['nickname'], session['logged_email']))
-        conn.commit()
+        userUpdateNicknameByEmail(request.form['nickname'], session['logged_email'])
         flash('Edit Nickname Success!', 'success')
-    cursor.execute("SELECT * FROM users where email = %s;", (session['logged_email'],))
-    u = cursor.fetchone()
+    u = userByEmail(session['logged_email'])
     return render_template('users/edit.html', u=u)
 
 
@@ -127,9 +120,8 @@ def editPwd():
         oldPassword = request.form['oldPassword'].strip()
         newPassword = request.form['newPassword'].strip()
         newPassword2 = request.form['newPassword2'].strip()
-        cursor.execute("SELECT user_id FROM users WHERE email = %s AND password = crypt(%s, password);", \
-             (session['logged_email'], oldPassword))
-        u = cursor.fetchone()
+        u = userIdByEmailPassword(session['logged_email'], oldPassword)
+
         if u is None:
             flash("Your old password is not right.", 'danger')
         elif newPassword != newPassword2:
@@ -138,10 +130,7 @@ def editPwd():
             flash('The password has at least 6 characters', 'danger')
         else:
             password = newPassword
-            cursor.execute("UPDATE users SET password = crypt(%s, gen_salt('bf', 8)) where email = %s", \
-                (password, session['logged_email']))
-            conn.commit()
+            userUpdatePasswordByEmail(password, session['logged_email'])
             flash('Edit Password Success!', 'success')
-    cursor.execute("SELECT * FROM users where email = %s;", (session['logged_email'],))
-    u = cursor.fetchone()
+    u = userByEmail(session['logged_email'])
     return render_template('users/edit.html', u=u)

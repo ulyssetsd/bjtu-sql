@@ -1,7 +1,7 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 
-from flaskr.helpers import conn, cursor
+from helpers import conn, cursor
 
 def userGetAll():
 	cursor.execute("SELECT * FROM users")
@@ -13,15 +13,15 @@ def userIdByEmailPassword(email, password):
 	u = cursor.fetchone()
 	if u is None:
 		return None
-	return u[0]
+	return u
 
 def userByEmail(email):
 	cursor.execute("SELECT * FROM users where email = %s;", (email,))
 	u = cursor.fetchone()
 	return u
 
-def userCreate(email, nickname, password):
-	cursor.execute("INSERT INTO users(email,nickname,password) VALUES(%s,%s,crypt(%s, gen_salt('bf', 8)));", (email, nickname, password,))
+def userCreate(email, nickname, password, c_time):
+	cursor.execute("INSERT INTO users(email,nickname,password,c_time) VALUES(%s,%s,crypt(%s, gen_salt('bf', 8)), %s);", (email, nickname, password, c_time))
 	conn.commit()
 
 def userDelete(email):
