@@ -2,6 +2,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 
 from helpers import conn, cursor
+from datetime import datetime
 
 def userGetAll():
 	cursor.execute("SELECT * FROM users")
@@ -35,8 +36,6 @@ def userUpdateNicknameByEmail(nickname, email):
 def userUpdatePasswordByEmail(password, email):
 	cursor.execute("UPDATE users SET password = crypt(%s, gen_salt('bf', 8)) where email = %s", (password, email,))
 	conn.commit()
-
-
 
 
 
@@ -87,6 +86,42 @@ def messageCount():
 
 
 
+def commentCreate(msg_id, user_id, content, c_time):
+	cursor.execute("INSERT INTO comment(msg_id,user_id,content,c_time) VALUES(%s,%s,%s,%s);", (msg_id, user_id, content, c_time))
+	conn.commit()
+
+def commentUpdateById(content, cmt_id):
+	cursor.execute("UPDATE comment SET content = %s where cmt_id = %s;", (content, cmt_id))
+	conn.commit()
+
+def commentDeleteById(cmt_id):
+	cursor.execute("DELETE FROM comment where cmt_id = %s;", (cmt_id,))
+	conn.commit()
+
+def commentCount():
+	cursor.execute("SELECT COUNT(*) AS count FROM comment")
+	nb = cursor.fetchone()
+	if nb is None:
+		return 0
+	return nb['count']
+
+
+
+
+def likeCommentCreate(cmt_id, user_id, c_time):
+	cursor.execute("INSERT INTO like_cmt(cmt_id, user_id,c_time) VALUES(%s,%s,%s);", (cmt_id, user_id, c_time))
+	conn.commit()
+
+def likeCommentDelete(cmt_id, user_id):
+	cursor.execute("DELETE FROM like_cmt where cmt_id = %s AND user_id = %s;", (cmt_id, user_id))
+	conn.commit()
+
+def likeCommentCount():
+	cursor.execute("SELECT COUNT(*) AS count FROM like_cmt")
+	nb = cursor.fetchone()
+	if nb is None:
+		return 0
+	return nb['count']
 
 def likeMsgGetAll():
 	cursor.execute('SELECT * FROM like_msg')
@@ -107,3 +142,18 @@ def likeMsgCount():
 	if nb is None:
 		return 0
 	return nb['count']
+
+def followUser(following_id, follower_id):
+	cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (following_id, follower_id))
+	if cursor.fetchone() is None and following_id != follower_id:
+		c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		cursor.execute("INSERT INTO relation(following_id, follower_id, c_time) VALUES(%s,%s,%s);", (following_id, follower_id, c_time))
+		conn.commit()
+		cursor.execute("SELECT nickname FROM users WHERE user_id = %s;", (following_id,))
+	return ""
+
+def unfollowUser(following_id, follower_id):
+	cursor.execute("DELETE FROM relation where following_id = %s AND follower_id = %s;", (following_id, follower_id))
+	conn.commit()
+	cursor.execute("SELECT nickname FROM users WHERE user_id = %s;", (following_id,))
+	return ""
