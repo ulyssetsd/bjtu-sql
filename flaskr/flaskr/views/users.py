@@ -4,7 +4,7 @@ from flask import Flask, Blueprint, render_template, redirect, request,\
 from datetime import datetime
 from helpers import conn, cursor
 from views import comment, like_msg
-from requete import userByEmail, userIdByEmailPassword, userCreate, userUpdateNicknameByEmail, userUpdatePasswordByEmail
+from requete import userByEmail, userByNickname, userIdByEmailPassword, userCreate, userUpdateNicknameByEmail, userUpdatePasswordByEmail
 import re
 
 app = Flask(__name__)
@@ -49,19 +49,22 @@ def register():
 
         email = email.lower()
 
-        u = userByEmail(email)
+        uByEmail = userByEmail(email)
+        uByNickname = userByNickname(nickname)
 
         if email == "" or nickname == "" or password == "" or password2 == "":
             flash('Please input all the information', 'danger')
         elif not re.match(r'^[0-9a-zA-Z_]{0,19}@' +
                           '[0-9a-zA-Z]{1,15}\.[0-9a-zA-Z]{2,4}', email):
             flash('Please input the right email', 'danger')
-        elif u is not None:
-            flash('The email has already exist', 'danger')
+        elif uByEmail is not None:
+            flash('The email already exist', 'danger')
+        elif uByNickname is not None:
+            flash('The nickname already exist', 'danger')
         elif password2 != password:
             flash('The password is not repeated correctly', 'danger')
         elif len(password) < 6:
-            flash('The password has at least 6 characters', 'danger')
+            flash('The password should be at least 6 characters', 'danger')
         else:
             userCreate(email, nickname, password, c_time)
             flash('Register Success!', 'success')
@@ -108,8 +111,14 @@ def logout():
 @mod.route('/edit', methods=['GET', 'POST'])
 def edit():
     if request.method == 'POST':
-        userUpdateNicknameByEmail(request.form['nickname'], session['logged_email'])
-        flash('Edit Nickname Success!', 'success')
+        uByNickname = userByNickname(request.form['nickname'])
+        if request.form['nickname'] == "":
+            flash('The nickname can not be null', 'danger')
+        elif uByNickname is not None:
+            flash('The nickname has already exist', 'danger')
+        else:
+            userUpdateNicknameByEmail(request.form['nickname'], session['logged_email'])
+            flash('Edit Nickname Success!', 'success')
     u = userByEmail(session['logged_email'])
     return render_template('users/edit.html', u=u)
 

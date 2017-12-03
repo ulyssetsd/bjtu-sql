@@ -21,6 +21,11 @@ def userByEmail(email):
 	u = cursor.fetchone()
 	return u
 
+def userByNickname(nickname):
+	cursor.execute("SELECT * FROM users where nickname = %s;", (nickname,))
+	u = cursor.fetchone()
+	return u
+
 def userCreate(email, nickname, password, c_time):
 	cursor.execute("INSERT INTO users(email,nickname,password,c_time) VALUES(%s,%s,crypt(%s, gen_salt('bf', 8)), %s);", (email, nickname, password, c_time))
 	conn.commit()
