@@ -9,11 +9,19 @@ def userGetAll():
 	users = cursor.fetchall()
 	return users
 
+def userDeleteAll():
+	cursor.execute("truncate table users")
+
 def userIdByEmailPassword(email, password):
 	cursor.execute("SELECT user_id FROM users WHERE email = %s AND password = crypt(%s, password);", (email, password,))
 	u = cursor.fetchone()
 	if u is None:
 		return None
+	return u
+
+def userByUserId(user_id):
+	cursor.execute("SELECT * FROM users where user_id = %s;", (user_id,))
+	u = cursor.fetchone()
 	return u
 
 def userByEmail(email):
@@ -44,6 +52,8 @@ def userUpdatePasswordByEmail(password, email):
 
 
 
+def messageDeleteAll():
+	cursor.execute("truncate table message")
 
 def messageGetAll():
 	cursor.execute('SELECT * FROM message')
@@ -89,7 +99,13 @@ def messageCount():
 	return nb['count']
 
 
+def commentGetAll():
+	cursor.execute('SELECT * FROM comment')
+	message = cursor.fetchall()
+	return message
 
+def commentDeleteAll():
+	cursor.execute("truncate table comment")
 
 def commentCreate(msg_id, user_id, content, c_time):
 	cursor.execute("INSERT INTO comment(msg_id,user_id,content,c_time) VALUES(%s,%s,%s,%s);", (msg_id, user_id, content, c_time))
@@ -113,6 +129,9 @@ def commentCount():
 
 
 
+def likeDeleteAll():
+	cursor.execute("truncate table like_cmt")
+
 def likeCommentCreate(cmt_id, user_id, c_time):
 	cursor.execute("INSERT INTO like_cmt(cmt_id, user_id,c_time) VALUES(%s,%s,%s);", (cmt_id, user_id, c_time))
 	conn.commit()
@@ -127,6 +146,13 @@ def likeCommentCount():
 	if nb is None:
 		return 0
 	return nb['count']
+
+
+
+
+
+def likeMsgDeleteAll():
+	cursor.execute("truncate table like_msg")
 
 def likeMsgGetAll():
 	cursor.execute('SELECT * FROM like_msg')
@@ -148,7 +174,19 @@ def likeMsgCount():
 		return 0
 	return nb['count']
 
-def followUser(following_id, follower_id):
+
+
+def relationByFollowingIdAndFollwerId(following_id, follower_id):
+	cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (following_id, follower_id,))
+	ms = cursor.fetchall()
+	return ms
+
+
+
+
+
+# ervin
+def userFollow(following_id, follower_id):
 	cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (following_id, follower_id))
 	if cursor.fetchone() is None and following_id != follower_id:
 		c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -157,7 +195,7 @@ def followUser(following_id, follower_id):
 		cursor.execute("SELECT nickname FROM users WHERE user_id = %s;", (following_id,))
 	return ""
 
-def unfollowUser(following_id, follower_id):
+def userUnfollow(following_id, follower_id):
 	cursor.execute("DELETE FROM relation where following_id = %s AND follower_id = %s;", (following_id, follower_id))
 	conn.commit()
 	cursor.execute("SELECT nickname FROM users WHERE user_id = %s;", (following_id,))
