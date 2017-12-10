@@ -94,15 +94,18 @@ def login():
 
         email = email.lower()
 
-        rep = loginRequest(email, password)
-        if rep != "Login Success!":
-            flash(rep, 'danger')
+        if email == "" or password == "":
+            flash('Please input all the information', 'danger')
         else:
-            u = userIdByEmailPassword(email, password)
-            session['logged_in'] = True
-            session['logged_email'] = email
-            session['logged_id'] = u['user_id']
-            return redirect(url_for('show_entries'))
+            rep = loginRequest(email, password)
+            if rep != "Login Success!":
+                flash(rep, 'danger')
+            else:
+                u = userIdByEmailPassword(email, password)
+                session['logged_in'] = True
+                session['logged_email'] = email
+                session['logged_id'] = u['user_id']
+                return redirect(url_for('show_entries'))
 
         # u = userByEmail(email)
 

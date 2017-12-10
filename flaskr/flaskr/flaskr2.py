@@ -4,7 +4,6 @@ from helpers import conn, cursor
 
 app = Flask(__name__)  # create the application instance :)
 
-
 from views import users, message, comment, like_msg, like_cmt, relation, search
 app.register_blueprint(users.mod)
 app.register_blueprint(message.mod)
@@ -19,6 +18,14 @@ app.register_blueprint(search.mod)
 #def shutdown_session(exception=None):
     #cursor.close()
     #conn.close()
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('page_not_found.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('internal_server_error.html')
 
 @app.route('/')
 def show_entries():
