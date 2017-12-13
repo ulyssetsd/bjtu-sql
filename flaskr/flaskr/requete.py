@@ -1,5 +1,5 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-    render_template, flash
+		render_template, flash
 
 from helpers import conn, cursor
 from datetime import datetime
@@ -73,6 +73,11 @@ def messageGetAllFromUserIdOrder(user_id):
 	m = cursor.fetchall()
 	return m
 
+def messageGetAllFromManyUserIdOrder(tuple_list_user_id):
+	cursor.execute('SELECT * FROM message where user_id IN %s ORDER BY c_time DESC', (tuple_list_user_id,))
+	m = cursor.fetchall()
+	return m
+
 def messageDeleteById(msg_id):
 	cursor.execute("DELETE FROM message where msg_id = %s;", (msg_id,))
 	conn.commit()
@@ -104,6 +109,16 @@ def commentGetAll():
 	message = cursor.fetchall()
 	return message
 
+def commentByCmtId(cmt_id):
+	cursor.execute("SELECT * FROM comment where cmt_id = %s;", (cmt_id,))
+	cmt = cursor.fetchone()
+	return cmt
+
+def commentByMsgIdOrder(msg_id):
+	cursor.execute("SELECT * FROM comment where msg_id = %s ORDER BY c_time ASC;", (msg_id,))
+	cs = cursor.fetchall()
+	return cs
+
 def commentDeleteAll():
 	cursor.execute("truncate table comment")
 
@@ -126,26 +141,41 @@ def commentCount():
 		return 0
 	return nb['count']
 
+def CommentCountCmt(msg_id):
+		cursor.execute("SELECT COUNT(*) AS count FROM comment where msg_id = %s;", (msg_id,))
+		like_num = cursor.fetchone()
+		return like_num['count']
 
 
 
-def likeDeleteAll():
+
+def likeCmtDeleteAll():
 	cursor.execute("truncate table like_cmt")
 
-def likeCommentCreate(cmt_id, user_id, c_time):
+def likeCmtCreate(cmt_id, user_id, c_time):
 	cursor.execute("INSERT INTO like_cmt(cmt_id, user_id,c_time) VALUES(%s,%s,%s);", (cmt_id, user_id, c_time))
 	conn.commit()
 
-def likeCommentDelete(cmt_id, user_id):
+def likeCmtDelete(cmt_id, user_id):
 	cursor.execute("DELETE FROM like_cmt where cmt_id = %s AND user_id = %s;", (cmt_id, user_id))
 	conn.commit()
 
-def likeCommentCount():
+def likeCmtGetOne(cmt_id, user_id):
+	cursor.execute("SELECT * FROM like_cmt where cmt_id = %s AND user_id = %s", (cmt_id, user_id))
+	like = cursor.fetchone()
+	return like
+
+def likeCmtCount():
 	cursor.execute("SELECT COUNT(*) AS count FROM like_cmt")
 	nb = cursor.fetchone()
 	if nb is None:
 		return 0
 	return nb['count']
+
+def likeCmtCountLike(cmt_id):
+		cursor.execute("SELECT COUNT(*) AS count FROM like_cmt where cmt_id = %s;", (cmt_id,))
+		like_num = cursor.fetchone()
+		return like_num['count']
 
 
 
@@ -159,8 +189,13 @@ def likeMsgGetAll():
 	message = cursor.fetchall()
 	return message
 
+def likeMsgGetOne(msg_id, user_id):
+	cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (msg_id, user_id))
+	like = cursor.fetchone()
+	return like
+
 def likeMsgCreate(msg_id, user_id, c_time):
-	cursor.execute("INSERT INTO like_msg(msg_id, user_id,c_time) VALUES(%s,%s,%s);", (msg_id, user_id, c_time,))
+	cursor.execute("INSERT INTO like_msg(msg_id, user_id, c_time) VALUES(%s,%s,%s);", (msg_id, user_id, c_time,))
 	conn.commit()
 
 def likeMsgDelete(msg_id, user_id):
@@ -174,16 +209,45 @@ def likeMsgCount():
 		return 0
 	return nb['count']
 
+def likeMsgCountLike(msg_id):
+	cursor.execute("SELECT COUNT(*) AS count FROM like_msg where msg_id = %s;", (msg_id,))
+	like_num = cursor.fetchone()
+	return like_num['count']
 
 
-def relationByFollowingIdAndFollwerId(following_id, follower_id):
+def relationCreate(following_id, follower_id, c_time):
+	cursor.execute("INSERT INTO relation(following_id, follower_id, c_time) VALUES(%s,%s,%s);", (following_id, follower_id, c_time))
+	conn.commit()
+
+def relationDelete(following_id, follower_id):
+	cursor.execute("DELETE FROM relation where following_id = %s AND follower_id = %s;", (following_id, follower_id))
+	conn.commit()
+
+def relationByFollowingIdAndFollowerId(following_id, follower_id):
 	cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (following_id, follower_id,))
-	ms = cursor.fetchall()
-	return ms
+	r = cursor.fetchone()
+	return r
+
+def relationByFollowerId(follower_id):
+	cursor.execute('SELECT * FROM relation where follower_id = %s', (follower_id,))
+	rs = cursor.fetchall()
+	return rs
+
+def relationGetFollowerUserByFollowingId(following_id):
+	cursor.execute("SELECT * FROM relation, users WHERE user_id = follower_id AND following_id = %s;", (following_id,))
+	followers = cursor.fetchall()
+	return followers
+
+def relationGetFollowingUserByFollowerId(follower_id):
+	cursor.execute("SELECT * FROM relation, users WHERE user_id = following_id AND follower_id = %s;", (follower_id,))
+	followings = cursor.fetchall()
+	return followings
 
 
-
-
+def searchGetUserResults(search, user_id):
+	cursor.execute("SELECT * FROM users WHERE (nickname LIKE %s OR email LIKE %s) AND user_id != %s;", (search, search, user_id))
+	users = cursor.fetchall()
+	return users
 
 # ervin
 def userFollow(following_id, follower_id):

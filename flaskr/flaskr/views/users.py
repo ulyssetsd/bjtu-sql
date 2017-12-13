@@ -4,7 +4,7 @@ from flask import Flask, Blueprint, render_template, redirect, request,\
 from datetime import datetime
 from helpers import conn, cursor
 from views import comment, like_msg
-from requete import userByEmail, userByNickname, userIdByEmailPassword, userCreate, userUpdateNicknameByEmail, userUpdatePasswordByEmail, userByUserId, messageGetAllFromUserIdOrder
+from requete import userByEmail, userByNickname, userIdByEmailPassword, userCreate, userUpdateNicknameByEmail, userUpdatePasswordByEmail, userByUserId, messageGetAllFromUserIdOrder, CommentCountCmt, likeMsgCountLike, relationByFollowingIdAndFollowerId, likeMsgGetOne
 import re
 
 app = Flask(__name__)
@@ -16,26 +16,19 @@ def show_me():
 
 @mod.route('/<int:user_id>', methods=['GET', 'POST'])
 def show(user_id):
-    #cursor.execute("SELECT * FROM users where user_id = %s;", (user_id,))
-    #u = cursor.fetchone()
     u = userByUserId(user_id)
     u = dict(u.items())
-    #cursor.execute('SELECT * FROM relation WHERE following_id = %s AND follower_id = %s', (u['user_id'], session['logged_id']))
-    u['is_followed'] = cursor.fetchone() is not None
+    u['is_followed'] = relationByFollowingIdAndFollowerId(u['user_id'], session['logged_id']) is not None
     u['is_me'] = u['user_id'] == session['logged_id']
-    #cursor.execute("SELECT * FROM message where user_id = %s ORDER BY c_time DESC;", (user_id,))
-    #ms = cursor.fetchall()
     ms = messageGetAllFromUserIdOrder(user_id)
     entries = []
     for m in ms:
         m = dict(m.items())
-        cursor.execute("SELECT nickname FROM users where user_id = %s", (m['user_id'],))
-        m['nickname'] = cursor.fetchone()['nickname']
-        cursor.execute("SELECT * FROM like_msg where msg_id = %s AND user_id = %s", (m['msg_id'], session['logged_id']))
-        m['like_flag'] = cursor.fetchone() is not None
+        m['nickname'] = userByUserId(m['user_id'])['nickname']
+        m['like_flag'] = likeMsgGetOne(m['msg_id'], session['logged_id']) is not None
         m['is_mine'] = m['user_id'] == session['logged_id']
-        m['like_num'] = like_msg.countlike(m['msg_id'])
-        m['cmt_num'] = comment.countcmt(m['msg_id'])
+        m['like_num'] = likeMsgCountLike(m['msg_id'])
+        m['cmt_num'] = CommentCountCmt(m['msg_id'])
         entries.append(m)
     ms=entries
     return render_template('users/show.html', u=u, ms=ms)
@@ -43,13 +36,11 @@ def show(user_id):
 @mod.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        email = request.form['email'].strip()
+        email = request.form['email'].strip().lower()
         nickname = request.form['nickname'].strip()
         password = request.form['password'].strip()
         password2 = request.form['password2'].strip()
         c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-        email = email.lower()
 
         uByEmail = userByEmail(email)
         uByNickname = userByNickname(nickname)
@@ -89,10 +80,8 @@ def login():
     if session.get('logged_in'):
         return redirect(url_for('show_entries'))
     if request.method == 'POST':
-        email = request.form['email'].strip()
+        email = request.form['email'].strip().lower()
         password = request.form['password'].strip()
-
-        email = email.lower()
 
         if email == "" or password == "":
             flash('Please input all the information', 'danger')
@@ -146,7 +135,7 @@ def edit():
         # if newNickname == "":
         #     flash('The nickname can not be null', 'danger')
         # elif uByNickname is not None:
-        #     flash('The nickname has already exist', 'danger')
+        #     flash('The nickname already exist', 'danger')
         # else:
         #     userUpdateNicknameByEmail(request.form['nickname'], session['logged_email'])
         #     flash('Edit Nickname Success!', 'success')
@@ -175,7 +164,7 @@ def editPwd():
         # elif newPassword != newPassword2:
         #     flash('The password is not repeated correctly', 'danger')
         # elif len(newPassword) < 6:
-        #     flash('The password has at least 6 characters', 'danger')
+        #     flash('The password should be at least 6 characters', 'danger')
         # else:
         #     password = newPassword
         #     userUpdatePasswordByEmail(password, session['logged_email'])
@@ -188,7 +177,7 @@ def editNicknameRequest(uByNickname, newNickname):
     if newNickname == "":
         return 'The nickname can not be null'
     elif uByNickname is not None:
-        return 'The nickname has already exist'
+        return 'The nickname already exist'
     else:
         return 'Edit Nickname Success!'
 
@@ -198,7 +187,7 @@ def editPasswordRequest(u, newPassword, newPassword2):
     elif newPassword != newPassword2:
         return 'The password is not repeated correctly'
     elif len(newPassword) < 6:
-        return 'The password has at least 6 characters'
+        return 'The password should be at least 6 characters'
     else:
         return "Edit Password Success!"
 

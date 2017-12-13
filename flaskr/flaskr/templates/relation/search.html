@@ -3,8 +3,8 @@
   <h2>Search's results</h2>
 {% endblock %}
 {% block cardbody %}
-  <form action="{{ url_for('search.results') }}" method=post>
-    {{ forms.special_input('search', type='text', value=search, label='Search...', send_label='Search it 🔍', add_pic=False) }}
+  <form action="{{ url_for('search.new_search') }}" method=post>
+    {{ forms.special_input('search', type='text', value=search, label='Search users...', send_label='🔍', add_pic=False) }}
   </form>
   <hr/>
   {% for u in users %}

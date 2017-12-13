@@ -48,9 +48,9 @@ class FlaskrTestCase(unittest.TestCase):
 			self.ptrCommentCount = commentCount
 			self.ptrCommentDeleteById = commentDeleteById
 			self.ptrCommentUpdateById = commentUpdateById
-			self.ptrLikeCommentCreate = likeCommentCreate
-			self.ptrLikeCommentDelete = likeCommentDelete
-			self.ptrLikeCommentCount = likeCommentCount
+			self.ptrLikeCmtCreate = likeCmtCreate
+			self.ptrLikeCmtDelete = likeCmtDelete
+			self.ptrLikeCmtCount = likeCmtCount
 			self.ptrLikeMsgGetAll = likeMsgGetAll
 			self.ptrLikeMsgCreate = likeMsgCreate
 			self.ptrLikeMsgDelete = likeMsgDelete
@@ -778,7 +778,7 @@ class FlaskrTestCase(unittest.TestCase):
 
 		a = self.ptrEditPasswordRequest(u, fakePassword, fakePassword)
 		self.debugTxt += 'Reponse: ' + a + ' : '
-		if a == "The password has at least 6 characters":
+		if a == "The password should be at least 6 characters":
 			self.debugTxt += "Changement password refuse"  + self.retourLine
 			self.display('test_editPasswordRequestPasswordToSmall', "")
 		else:
@@ -815,7 +815,7 @@ class FlaskrTestCase(unittest.TestCase):
 
 		a = self.ptrEditNicknameRequest(u, 'nickkyyy')
 		self.debugTxt += 'Reponse: ' + a + ' : '
-		if a == "The nickname has already exist":
+		if a == "The nickname already exist":
 			self.debugTxt += "Changement nickname refuse"  + self.retourLine
 			self.display('test_editNicknameRequestNicknameCopy', "")
 		else:
@@ -866,12 +866,12 @@ class FlaskrTestCase(unittest.TestCase):
 		n = self.ptrCommentCount()
 		self.ptrMessageCreate(self.idGeneral, 'message to comment', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 		self.ptrCommentCreate(self.idGeneral, self.idGeneral, 'Comment the message', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-		self.ptrLikeCommentCreate(self.idGeneral, self.idGeneral, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+		self.ptrLikeCmtCreate(self.idGeneral, self.idGeneral, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 		u1 = self.ptrMessageCount()
 		n1 = self.ptrCommentCount()
 		if u < u1:
 			if n < n1:
-				self.ptrLikeCommentDelete(self.idGeneral, self.idGeneral)
+				self.ptrLikeCmtDelete(self.idGeneral, self.idGeneral)
 				self.ptrCommentDeleteById(self.idGeneral)
 				self.ptrMessageDeleteByUserId(self.idGeneral)
 				self.display('test_likeCmtCreateDel', "")
@@ -978,4 +978,4 @@ if __name__ == '__main__':
 
 
 
-#userByUserId , ptrLikeCommentDelete
+#userByUserId , ptrLikeCmtDelete

@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, request,\
     url_for, session, flash
 from helpers import conn, cursor
 from datetime import datetime
+from requete import commentCreate, commentByCmtId, commentUpdateById, commentDeleteById
 
 mod = Blueprint('comment', __name__, url_prefix='/comment',)
 
@@ -16,8 +17,7 @@ def add():
         if content == "":
             flash('Do not send null ', 'warning')
         else:
-            cursor.execute("INSERT INTO comment(msg_id,user_id,content,c_time) VALUES(%s,%s,%s,%s);", (msg_id, user_id, content, c_time))
-            conn.commit()
+            commentCreate(msg_id, user_id, content, c_time)
     return redirect(url_for('message.show', msg_id=msg_id))
 
 
@@ -25,21 +25,17 @@ def add():
 def edit(cmt_id):
     m = None
     if request.method == 'GET':
-        cursor.execute("SELECT * FROM comment where cmt_id = %s ORDER BY c_time ASC;", (cmt_id,))
-        m = cursor.fetchone()
+        m = commentByCmtId(cmt_id)
         return render_template('comment/edit.html', m=m, cmt_id=cmt_id)
 
     if request.method == 'POST':
-        cursor.execute("SELECT user_id FROM comment where cmt_id = %s;", (cmt_id,))
-        if cursor.fetchone()['user_id'] == session['logged_id']:
+        m = commentByCmtId(cmt_id)
+        if m['user_id'] == session['logged_id']:
             content = request.form['content']
-            cursor.execute("UPDATE comment SET content = %s where cmt_id = %s;", (content, cmt_id))
-            conn.commit()
+            commentUpdateById(content, cmt_id)
             flash('Edit Success!', 'success')
         else:
             flash("You are not the owner of this comment! You can't edit it.", 'warning')
-        cursor.execute("SELECT msg_id FROM comment where cmt_id = %s;", (cmt_id,))
-        m = cursor.fetchone()
         return redirect(url_for('message.show', msg_id=m['msg_id']))
 
     return render_template('comment/edit.html', m=m, cmt_id=cmt_id)
@@ -48,11 +44,9 @@ def edit(cmt_id):
 @mod.route('/delete/<int:cmt_id>', methods=['GET', 'POST'])
 def delete(cmt_id):
     if request.method == 'GET':
-        cursor.execute("SELECT msg_id, user_id FROM comment where cmt_id = %s;", (cmt_id,))
-        m = cursor.fetchone()
+        m = commentByCmtId(cmt_id)
         if m['user_id'] == session['logged_id']:
-            cursor.execute("DELETE FROM comment where cmt_id = %s;", (cmt_id,))
-            conn.commit()
+            commentDeleteById(cmt_id)
             flash('Delete Success!', 'success')
         else:
             flash("You are not the owner of this comment! You can't delete it.", 'warning')
