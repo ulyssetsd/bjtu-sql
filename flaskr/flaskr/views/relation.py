@@ -8,10 +8,14 @@ mod = Blueprint('relation', __name__, url_prefix='/relation',)
 
 @mod.route('/me')
 def show_me():
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     return redirect(url_for('relation.show', user_id=session['logged_id']))
 
 @mod.route('/<int:user_id>')
 def show(user_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     followers = relationGetFollowerUserByFollowingId(user_id)
     followings = relationGetFollowingUserByFollowerId(user_id)
     followings = add_informations(followings, session['logged_id'])
@@ -20,6 +24,8 @@ def show(user_id):
 
 @mod.route('/follow/<int:following_id>')
 def follow(following_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     follower_id = session['logged_id']
     r = relationByFollowingIdAndFollowerId(following_id, follower_id)
     if r is not None:
@@ -34,6 +40,8 @@ def follow(following_id):
 
 @mod.route('/unfollow/<int:following_id>')
 def unfollow(following_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     follower_id = session['logged_id']
     relationDelete(following_id, follower_id)
     flash('You unfollowed %s !' % userByUserId(following_id)['nickname'], 'success')

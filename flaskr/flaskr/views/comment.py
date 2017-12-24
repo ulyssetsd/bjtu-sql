@@ -9,6 +9,8 @@ mod = Blueprint('comment', __name__, url_prefix='/comment',)
 
 @mod.route('/add', methods=['GET', 'POST'])
 def add():
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     if request.method == 'POST':
         msg_id = int(request.form['msg_id'])
         user_id = session['logged_id']
@@ -23,6 +25,8 @@ def add():
 
 @mod.route('/edit/<int:cmt_id>', methods=['GET', 'POST'])
 def edit(cmt_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     m = None
     if request.method == 'GET':
         m = commentByCmtId(cmt_id)
@@ -43,6 +47,8 @@ def edit(cmt_id):
 
 @mod.route('/delete/<int:cmt_id>', methods=['GET', 'POST'])
 def delete(cmt_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     if request.method == 'GET':
         m = commentByCmtId(cmt_id)
         if m['user_id'] == session['logged_id']:

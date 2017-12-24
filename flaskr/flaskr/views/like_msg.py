@@ -10,6 +10,8 @@ mod = Blueprint('like_msg', __name__, url_prefix='/message',)
 
 @mod.route('/like/<int:msg_id>', methods=['GET', 'POST'])
 def like(msg_id):
+	if not session.get('logged_in'):
+		return redirect(url_for('users.login'))
 	c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 	likeMsgCreate(msg_id, session['logged_id'], c_time)
 	return redirect(redirect_url())
@@ -17,5 +19,7 @@ def like(msg_id):
 
 @mod.route('/unlike/<int:msg_id>', methods=['GET', 'POST'])
 def unlike(msg_id):
+	if not session.get('logged_in'):
+		return redirect(url_for('users.login'))
 	likeMsgDelete(msg_id, session['logged_id'])
 	return redirect(redirect_url())

@@ -10,6 +10,8 @@ mod = Blueprint('like_cmt', __name__, url_prefix='/like_cmt',)
 
 @mod.route('/like/<int:cmt_id>', methods=['GET', 'POST'])
 def like(cmt_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     if request.method == 'GET':
         c_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         likeCmtCreate(cmt_id, session['logged_id'], c_time)
@@ -18,6 +20,8 @@ def like(cmt_id):
 
 @mod.route('/unlike/<int:cmt_id>', methods=['GET', 'POST'])
 def unlike(cmt_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     if request.method == 'GET':
         likeCmtDelete(cmt_id, session['logged_id'])
     return redirect(redirect_url())

@@ -10,6 +10,8 @@ mod = Blueprint('message', __name__, url_prefix='/message',)
 
 @mod.route('/<int:msg_id>', methods=['GET', 'POST'])
 def show(msg_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     if request.method == 'GET':
         m = messageById(msg_id)
         cs = commentByMsgIdOrder(msg_id)
@@ -24,6 +26,8 @@ def show(msg_id):
 
 @mod.route('/add', methods=['GET', 'POST'])
 def add():
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     if request.method == 'POST':
         user_id = session['logged_id']
         content = request.form['content']
@@ -38,6 +42,8 @@ def add():
 
 @mod.route('/edit/<int:msg_id>', methods=['GET', 'POST'])
 def edit(msg_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     m = messageById(msg_id)
     if request.method == 'POST':
         if m['user_id'] == session['logged_id']:
@@ -53,6 +59,8 @@ def edit(msg_id):
 
 @mod.route('/delete/<int:msg_id>', methods=['GET', 'POST'])
 def delete(msg_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     m = messageById(msg_id)
     if request.method == 'GET':
         if m['user_id'] == session['logged_id']:

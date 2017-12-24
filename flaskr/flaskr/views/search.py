@@ -10,6 +10,8 @@ mod = Blueprint('search', __name__, url_prefix='/search',)
 
 @mod.route('/', methods=['GET', 'POST'])
 def new_search():
+	if not session.get('logged_in'):
+		return redirect(url_for('users.login'))
 	if request.method == 'POST':
 		search_request = request.form['search'].strip().lower()
 		if search_request == '':
@@ -21,6 +23,8 @@ def new_search():
 
 @mod.route('/<string:search_request>', methods=['GET', 'POST'])
 def results(search_request):
+	if not session.get('logged_in'):
+		return redirect(url_for('users.login'))
 	search = '%' + search_request + '%'
 	users = searchGetUserResults(search, session['logged_id'])
 	tmp_users = []

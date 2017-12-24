@@ -50,11 +50,6 @@ def show_entries():
     return render_template('show_entries.html', ms=ms)
 
 
-@app.route('/add', methods=['POST'])
-def add_entry():
-    return render_template('show_entries.html')
-
-
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = 'bjtu-sql'

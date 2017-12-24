@@ -12,10 +12,14 @@ mod = Blueprint('users', __name__, url_prefix='/users',)
 
 @mod.route('/me')
 def show_me():
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     return redirect(url_for('users.show', user_id=session['logged_id']))
 
 @mod.route('/<int:user_id>', methods=['GET', 'POST'])
 def show(user_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     u = userByUserId(user_id)
     u = dict(u.items())
     u['is_followed'] = relationByFollowingIdAndFollowerId(u['user_id'], session['logged_id']) is not None
@@ -123,6 +127,8 @@ def logout():
 
 @mod.route('/edit', methods=['GET', 'POST'])
 def edit():
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     if request.method == 'POST':
         newNickname = request.form['nickname']
         uByNickname = userByNickname(request.form['nickname'])
@@ -145,6 +151,8 @@ def edit():
 
 @mod.route('/editPwd', methods=['GET', 'POST'])
 def editPwd():
+    if not session.get('logged_in'):
+        return redirect(url_for('users.login'))
     if request.method == 'POST':
         oldPassword = request.form['oldPassword'].strip()
         newPassword = request.form['newPassword'].strip()
