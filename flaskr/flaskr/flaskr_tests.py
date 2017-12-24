@@ -55,7 +55,7 @@ class FlaskrTestCase(unittest.TestCase):
 			self.ptrLikeMsgCreate = likeMsgCreate
 			self.ptrLikeMsgDelete = likeMsgDelete
 			self.ptrLikeMsgCount = likeMsgCount
-			self.ptrLikeDeleteAll = likeDeleteAll
+			self.ptrLikeCmtDeleteAll = likeCmtDeleteAll
 			self.ptrMessageDeleteAll = messageDeleteAll
 			self.ptrCommentDeleteAll = commentDeleteAll
 			self.ptrLikeMsgDeleteAll = likeMsgDeleteAll
@@ -75,7 +75,7 @@ class FlaskrTestCase(unittest.TestCase):
 
 	def test_aDropTable(self):
 		self.ptrUserDeleteAll()
-		self.ptrLikeDeleteAll()
+		self.ptrLikeCmtDeleteAll()
 		self.ptrMessageDeleteAll()
 		self.ptrCommentDeleteAll()
 		self.ptrLikeMsgDeleteAll()
@@ -943,7 +943,7 @@ class FlaskrTestCase(unittest.TestCase):
 		self.cleanEmail(self.emailGeneral)
 		self.ptrLikeMsgDelete(self.idGeneral, self.idGeneral)
 		self.ptrUserDeleteAll()
-		self.ptrLikeDeleteAll()
+		self.ptrLikeCmtDeleteAll()
 		self.ptrMessageDeleteAll()
 		self.ptrCommentDeleteAll()
 		self.ptrLikeMsgDeleteAll()
