@@ -51,6 +51,6 @@ def show_entries():
 
 
 if __name__ == '__main__':
-    app.debug = True
+    app.debug = False
     app.secret_key = 'bjtu-sql'
     app.run()

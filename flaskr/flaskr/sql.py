@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from helpers import conn, cursor
 
-sql = "DROP TABLE users; " + \
+sql = "DROP TABLE IF EXISTS users; " + \
       "CREATE TABLE users ( " + \
       "user_id serial primary key not null, " + \
       "email text, " + \
@@ -11,7 +11,7 @@ sql = "DROP TABLE users; " + \
 cursor.execute(sql)
 conn.commit()
 
-sql = "DROP TABLE message; " + \
+sql = "DROP TABLE IF EXISTS message; " + \
       "CREATE TABLE message ( " + \
       "msg_id serial primary key not null, " + \
       "user_id int not null, " + \
@@ -21,7 +21,7 @@ sql = "DROP TABLE message; " + \
 cursor.execute(sql)
 conn.commit()
 
-sql = "DROP TABLE comment; " + \
+sql = "DROP TABLE IF EXISTS comment; " + \
       "CREATE TABLE comment ( " + \
       "cmt_id serial primary key not null, " + \
       "msg_id int not null, " + \
@@ -31,7 +31,7 @@ sql = "DROP TABLE comment; " + \
 cursor.execute(sql)
 conn.commit()
 
-sql = "DROP TABLE like_msg; " + \
+sql = "DROP TABLE IF EXISTS like_msg; " + \
       "CREATE TABLE like_msg ( " + \
       "like_msg_id serial primary key not null, " + \
       "msg_id int not null, " + \
@@ -40,7 +40,7 @@ sql = "DROP TABLE like_msg; " + \
 cursor.execute(sql)
 conn.commit()
 
-sql = "DROP TABLE like_cmt; " + \
+sql = "DROP TABLE IF EXISTS like_cmt; " + \
       "CREATE TABLE like_cmt ( " + \
       "like_cmt_id serial primary key not null, " + \
       "cmt_id int not null, " + \
@@ -50,7 +50,7 @@ cursor.execute(sql)
 conn.commit()
 
 
-sql = "DROP TABLE relation;" + \
+sql = "DROP TABLE IF EXISTS relation;" + \
       "CREATE TABLE relation (" + \
       "relation_id serial primary key not null," + \
       "following_id int not null," + \
