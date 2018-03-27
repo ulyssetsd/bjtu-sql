@@ -1,6 +1,6 @@
 {% macro message(id='', content='', nickname='', user_id='', like=False, date='', is_comment=False, add_pic=True, is_mine=False, like_num=0, cmt_num=0) -%}
 {% if add_pic %}
-<img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+<img src="https://i.imgur.com/7gFE5I9.jpg" alt="..." class="rounded-circle profil-pic">
 {% endif %}
 <div class="post-container">
   <a href="{{ url_for('users.show', user_id=user_id) }}" >@{{ nickname }}</a> {{ content|safe }}<br>
@@ -31,7 +31,7 @@
 {%- endmacro %}
 
 {% macro user(user_id='', nickname='', email='', is_followed=True, is_me=False) %}
-<img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+<img src="https://i.imgur.com/7gFE5I9.jpg" alt="..." class="rounded-circle profil-pic">
 <div class="post-container"s>
   {% if not is_me and is_followed %} <a class="float-right btn btn-follow btn-outline-primary ml-1" href="{{ url_for('relation.unfollow', following_id=user_id) }}">unfollow</a>
   {% elif not is_me and not is_followed %} <a class="float-right btn btn-follow btn-primary ml-1" href="{{ url_for('relation.follow', following_id=user_id) }}">follow</a>

@@ -50,7 +50,8 @@ li.comment {
 }
 
 li.comment .profil-pic {
-	left: 76px;
+	left: 60px;
+	top: 10px;
 }
 
 #logo {

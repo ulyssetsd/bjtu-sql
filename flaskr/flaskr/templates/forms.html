@@ -18,7 +18,7 @@
 
 {% macro special_input(name, value='', type='text', label='', placeholder=label, readonly='', send_label='Send ➤', add_pic=True) -%}
 {% if add_pic %}
-<img src="img/profil.png" alt="..." class="rounded-circle profil-pic">
+<img src="https://i.imgur.com/7gFE5I9.jpg" alt="..." class="rounded-circle profil-pic">
 {% endif %}
 <div class="input-group">
   <input name="{{ name }}" type="{{ type }}" class="form-control" placeholder="{{ placeholder }}" aria-label="{{ label }}" value="{{ value|e }}" {% if add_pic %} style="margin-left: 56px;"{% endif %} {{ readonly }} >
